@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useRental } from '../../contexts/RentalContext';
 
 const EmployeeDrivers = () => {
-  const { drivers } = useRental();
+  const { drivers, toggleDriverStatus } = useRental();
   const [activeTab, setActiveTab] = useState('All'); // 'All' | 'unassigned' | 'assigned'
 
   const filteredDrivers = drivers.filter((d) => {
@@ -82,6 +82,7 @@ const EmployeeDrivers = () => {
               <th className="px-md py-sm">Contact Phone</th>
               <th className="px-md py-sm">Status</th>
               <th className="px-md py-sm">Assigned Booking</th>
+              <th className="px-md py-sm text-right">Action</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-outline-variant/30 text-sm">
@@ -114,6 +115,18 @@ const EmployeeDrivers = () => {
                     ) : (
                       <span className="text-outline italic">—</span>
                     )}
+                  </td>
+                  <td className="px-md py-md text-right">
+                    <button
+                      onClick={() => toggleDriverStatus(driver.driver_id)}
+                      className={`px-3 py-1 rounded text-xs font-bold uppercase transition-all shadow-sm active:scale-95 ${
+                        isAssigned
+                          ? 'bg-gray-200 text-gray-800 hover:bg-gray-300'
+                          : 'bg-[#FFCD00] text-gray-950 hover:bg-amber-400'
+                      }`}
+                    >
+                      {isAssigned ? 'Release' : 'Assign'}
+                    </button>
                   </td>
                 </tr>
               );

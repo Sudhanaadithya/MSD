@@ -202,6 +202,21 @@ export const RentalProvider = ({ children }) => {
     return true;
   };
 
+  // Toggle Driver Status (Employee side)
+  const toggleDriverStatus = (driverId) => {
+    setDrivers((prev) =>
+      prev.map((d) =>
+        d.driver_id === driverId
+          ? {
+              ...d,
+              status: d.status === 'assigned' ? 'unassigned' : 'assigned',
+              assigned_booking_id: d.status === 'assigned' ? null : 'BK-SAMPLE-01',
+            }
+          : d
+      )
+    );
+  };
+
   // Submit Complaint (Customer side - Section 8.2)
   const addComplaint = async (complaintPayload) => {
     const newComplaint = {
@@ -245,6 +260,7 @@ export const RentalProvider = ({ children }) => {
         addBooking,
         processQRHandover,
         assignDriverToDelivery,
+        toggleDriverStatus,
         addComplaint,
         updateComplaintStatus,
       }}
