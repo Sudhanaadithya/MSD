@@ -9,6 +9,7 @@ import {
   getDrivers,
   getComplaints,
   createComplaint as dbCreateComplaint,
+  seedCloudDatabase,
 } from '../services/database';
 import { generateBookingQR, generateBookingId } from '../utils/qrUtils';
 import { publishKafkaEvent, KAFKA_TOPICS } from '../services/kafkaService';
@@ -28,6 +29,9 @@ export const RentalProvider = ({ children }) => {
     const initData = async () => {
       setLoading(true);
       try {
+        // Attempt cloud database seeding if tables are active
+        await seedCloudDatabase();
+
         const [eqData, bkData, notifData, drvData, cmpData] = await Promise.all([
           getEquipmentList(),
           getBookings(),

@@ -576,3 +576,42 @@ export async function searchFleet(queryStr) {
     return [];
   }
 }
+
+// ── Cloud Database Direct Auto-Seeder ────────────────────────────────
+export async function seedCloudDatabase() {
+  const results = {};
+  try {
+    const { error: siteErr } = await supabase.from('sites').upsert(SEED_SITES, { onConflict: 'site_id' });
+    results.sites = siteErr ? siteErr.message : 'OK';
+
+    const equipPayload = SEED_EQUIPMENT.map(({ sites, ...rest }) => ({ ...rest, current_site_id: 'S001' }));
+    const { error: eqErr } = await supabase.from('equipment').upsert(equipPayload, { onConflict: 'equipment_id' });
+    results.equipment = eqErr ? eqErr.message : 'OK';
+
+    const rentalPayload = SEED_RENTALS.map(({ equipment, sites, operators, ...rest }) => rest);
+    const { error: rentErr } = await supabase.from('rentals').upsert(rentalPayload, { onConflict: 'id' });
+    results.rentals = rentErr ? rentErr.message : 'OK';
+
+    const { error: altErr } = await supabase.from('alerts').upsert(SEED_ALERTS, { onConflict: 'id' });
+    results.alerts = altErr ? altErr.message : 'OK';
+
+    const { error: drvErr } = await supabase.from('drivers').upsert(SEED_DRIVERS, { onConflict: 'driver_id' });
+    results.drivers = drvErr ? drvErr.message : 'OK';
+
+    const { error: bkErr } = await supabase.from('bookings').upsert(SEED_BOOKINGS, { onConflict: 'booking_id' });
+    results.bookings = bkErr ? bkErr.message : 'OK';
+
+    const { error: notifErr } = await supabase.from('notifications').upsert(SEED_NOTIFICATIONS, { onConflict: 'notification_id' });
+    results.notifications = notifErr ? notifErr.message : 'OK';
+
+    const { error: cmpErr } = await supabase.from('complaints').upsert(SEED_COMPLAINTS, { onConflict: 'complaint_id' });
+    results.complaints = cmpErr ? cmpErr.message : 'OK';
+
+    console.log('[Supabase Cloud Seeder Results]:', results);
+    return { success: true, results };
+  } catch (err) {
+    console.warn('[Supabase Cloud Seeder Notice]:', err);
+    return { success: false, error: err.message };
+  }
+}
+
