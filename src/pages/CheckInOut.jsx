@@ -5,6 +5,8 @@ import { exportRentalReceiptPDF } from '../utils/pdfExport';
 import { useToast } from '../hooks/useToast';
 import { publishKafkaEvent, KAFKA_TOPICS } from '../services/kafkaService';
 
+import CameraQRScannerModal from '../components/CameraQRScannerModal';
+
 const SAMPLE_ASSETS = [
   { id: 'EX-402', name: 'EX-402 | Excavator Heavy', type: 'Excavator', site: 'S001' },
   { id: 'CR-110', name: 'CR-110 | Crawler Crane', type: 'Crane', site: 'S002' },
@@ -15,10 +17,8 @@ const SAMPLE_ASSETS = [
 const CheckInOut = () => {
   const { addToast } = useToast();
   const [fuelLevel, setFuelLevel] = useState(85);
-  const [isScanning, setIsScanning] = useState(false);
-  const [scanStatus, setScanStatus] = useState('ALIGN QR CODE');
-  const [useCamera, setUseCamera] = useState(false);
-  const videoRef = useRef(null);
+  const [isScannerModalOpen, setIsScannerModalOpen] = useState(false);
+  const [scanStatus, setScanStatus] = useState('READY TO SCAN');
 
   // Form State
   const [equipmentId, setEquipmentId] = useState('EX-402');
@@ -35,44 +35,21 @@ const CheckInOut = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [lastAnomalyResult, setLastAnomalyResult] = useState(null);
 
-  // Camera Activation
-  const handleScanClick = async () => {
-    setIsScanning(true);
-    setScanStatus('INITIALIZING SENSORS...');
+  // Camera QR Scan Callback
+  const handleQRScanSuccess = (decodedPayload) => {
+    const assetId = decodedPayload.toUpperCase().trim();
+    setEquipmentId(assetId);
 
-    try {
-      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
-        if (videoRef.current) {
-          videoRef.current.srcObject = stream;
-        }
-        setUseCamera(true);
-      }
-    } catch (err) {
-      console.warn('Camera access error or restricted environment:', err);
-    }
+    if (assetId.startsWith('CR')) setEquipmentType('Crane');
+    else if (assetId.startsWith('BD')) setEquipmentType('Bulldozer');
+    else if (assetId.startsWith('LD')) setEquipmentType('Loader');
+    else if (assetId.startsWith('GR')) setEquipmentType('Grader');
+    else setEquipmentType('Excavator');
 
-    setTimeout(() => setScanStatus('SCANNING TAG...'), 800);
-    setTimeout(() => {
-      setIsScanning(false);
-      setScanStatus('TAG IDENTIFIED: EX-402');
-      const randomAsset = SAMPLE_ASSETS[Math.floor(Math.random() * SAMPLE_ASSETS.length)];
-      setEquipmentId(randomAsset.id);
-      setEquipmentType(randomAsset.type);
-      setSiteId(randomAsset.site);
-      addToast(`QR Code Scanned! Loaded ${randomAsset.id} (${randomAsset.type})`, 'success', 'RFID Tag Recognized');
-    }, 2200);
+    setScanStatus(`SCANNED TAG: ${assetId}`);
+    addToast(`QR Code Recognized: ${assetId}! Equipment profile loaded.`, 'success', 'Live QR Decoded');
   };
 
-  const handleStopCamera = () => {
-    if (videoRef.current && videoRef.current.srcObject) {
-      const tracks = videoRef.current.srcObject.getTracks();
-      tracks.forEach((track) => track.stop());
-      videoRef.current.srcObject = null;
-    }
-    setUseCamera(false);
-    setScanStatus('ALIGN QR CODE');
-  };
 
   // Form Submit: Confirm Deployment
   const handleConfirmDeployment = async (e) => {
@@ -199,45 +176,41 @@ const CheckInOut = () => {
           <div className="relative bg-surface-container-lowest rounded-xl shadow-md overflow-hidden group">
             <div className="absolute top-0 left-0 w-full h-1 bg-primary-container"></div>
             <div className="p-lg flex flex-col md:flex-row items-center gap-xl">
-              <div className={`relative w-full md:w-64 h-64 bg-surface-dim rounded-lg flex items-center justify-center overflow-hidden border-2 border-dashed border-outline-variant transition-colors ${isScanning ? 'ring-4 ring-primary/50 border-primary' : 'group-hover:border-primary'}`}>
-                {useCamera ? (
-                  <video ref={videoRef} autoPlay playsInline className="w-full h-full object-cover" />
-                ) : (
-                  <>
-                    <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-primary via-transparent to-transparent"></div>
-                    <div className="absolute top-4 left-4 w-8 h-8 border-t-4 border-l-4 border-primary"></div>
-                    <div className="absolute top-4 right-4 w-8 h-8 border-t-4 border-r-4 border-primary"></div>
-                    <div className="absolute bottom-4 left-4 w-8 h-8 border-b-4 border-l-4 border-primary"></div>
-                    <div className="absolute bottom-4 right-4 w-8 h-8 border-b-4 border-r-4 border-primary"></div>
-                    <div className={`absolute top-0 left-0 w-full h-1 bg-primary shadow-[0_0_15px_#745b00] ${isScanning ? 'animate-[scan_2s_ease-in-out_infinite]' : 'animate-[scan_3s_ease-in-out_infinite]'}`}></div>
-                    <span className="material-symbols-outlined text-[64px] text-outline group-hover:text-primary transition-transform group-hover:scale-110 duration-500">qr_code_scanner</span>
-                  </>
-                )}
+              <div className="relative w-full md:w-64 h-64 bg-surface-dim rounded-lg flex items-center justify-center overflow-hidden border-2 border-dashed border-outline-variant transition-colors group-hover:border-primary">
+                <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-primary via-transparent to-transparent"></div>
+                <div className="absolute top-4 left-4 w-8 h-8 border-t-4 border-l-4 border-primary"></div>
+                <div className="absolute top-4 right-4 w-8 h-8 border-t-4 border-r-4 border-primary"></div>
+                <div className="absolute bottom-4 left-4 w-8 h-8 border-b-4 border-l-4 border-primary"></div>
+                <div className="absolute bottom-4 right-4 w-8 h-8 border-b-4 border-r-4 border-primary"></div>
+                <div className="absolute top-0 left-0 w-full h-1 bg-primary shadow-[0_0_15px_#745b00] animate-[scan_3s_ease-in-out_infinite]"></div>
+                <span className="material-symbols-outlined text-[64px] text-outline group-hover:text-primary transition-transform group-hover:scale-110 duration-500">qr_code_scanner</span>
                 <div className="absolute bottom-4 bg-surface-white/90 backdrop-blur px-md py-xs rounded-full shadow-sm">
                   <p className="font-label-bold text-label-bold text-on-surface">{scanStatus}</p>
                 </div>
               </div>
               <div className="flex-1 flex flex-col gap-md">
                 <div className="space-y-xs">
-                  <h2 className="font-headline-md text-headline-md text-on-surface">Rapid Asset QR Scanner</h2>
-                  <p className="font-body-md text-body-md text-on-surface-variant">Point device camera or click below to simulate QR/RFID tag scan for automatic equipment identification.</p>
+                  <h2 className="font-headline-md text-headline-md text-on-surface">Rapid Asset Camera QR Scanner (USP)</h2>
+                  <p className="font-body-md text-body-md text-on-surface-variant">Point hardware camera or select sample equipment tag to decode QR codes in real-time for automatic profile population & ML scoring.</p>
                 </div>
                 <div className="flex gap-sm">
-                  {!useCamera ? (
-                    <button onClick={handleScanClick} className="flex-1 bg-on-surface text-surface-white font-label-bold py-sm px-md rounded-lg flex items-center justify-center gap-sm hover:bg-on-surface-variant transition-all">
-                      <span className="material-symbols-outlined text-[20px]">videocam</span>
-                      {isScanning ? 'SCANNING...' : 'SCAN QR CODE'}
-                    </button>
-                  ) : (
-                    <button onClick={handleStopCamera} className="flex-1 bg-status-error text-white font-label-bold py-sm px-md rounded-lg flex items-center justify-center gap-sm hover:opacity-90 transition-all">
-                      <span className="material-symbols-outlined text-[20px]">videocam_off</span>
-                      STOP CAMERA
-                    </button>
-                  )}
+                  <button
+                    onClick={() => setIsScannerModalOpen(true)}
+                    className="flex-1 bg-[#FFCD00] hover:bg-[#E5B800] text-gray-950 font-black py-md px-md rounded-lg border-2 border-gray-900 shadow-md flex items-center justify-center gap-sm transition-all active:scale-95 text-xs"
+                  >
+                    <span className="material-symbols-outlined text-[22px] font-bold">qr_code_scanner</span>
+                    OPEN LIVE CAMERA QR SCANNER
+                  </button>
                 </div>
               </div>
             </div>
           </div>
+
+          <CameraQRScannerModal
+            isOpen={isScannerModalOpen}
+            onClose={() => setIsScannerModalOpen(false)}
+            onScanSuccess={handleQRScanSuccess}
+          />
 
           {/* ML Anomaly Alert Banner if scanned/tested */}
           {lastAnomalyResult && (

@@ -6,13 +6,18 @@ import { useAuth } from '../hooks/useAuth';
 import { useToast } from '../hooks/useToast';
 import { publishKafkaEvent, KAFKA_TOPICS } from '../services/kafkaService';
 import KafkaStreamTicker from '../components/KafkaStreamTicker';
+import CameraQRScannerModal from '../components/CameraQRScannerModal';
 
 const Dashboard = () => {
+
   const navigate = useNavigate();
   const { role, user } = useAuth();
   const { addToast } = useToast();
 
   const isCustomer = role === 'Customer';
+
+  const [isScannerModalOpen, setIsScannerModalOpen] = useState(false);
+
 
   const [summary, setSummary] = useState({
     totalAssets: 142,
@@ -466,15 +471,16 @@ const Dashboard = () => {
             <h3 className="font-headline-sm text-headline-sm uppercase tracking-tight border-b-4 border-primary pb-base inline-block self-start">Quick Actions</h3>
             <div className="flex flex-col gap-sm">
               <button 
-                onClick={() => navigate('/check-in-out')}
-                className="flex items-center justify-between w-full bg-primary-container p-md rounded-lg group hover:bg-primary transition-all duration-300 transform hover:-translate-y-1 active:scale-95 shadow-sm hover:shadow-md"
+                onClick={() => setIsScannerModalOpen(true)}
+                className="flex items-center justify-between w-full bg-[#FFCD00] hover:bg-[#E5B800] text-gray-950 border border-gray-900 font-black p-md rounded-lg group transition-all duration-300 transform hover:-translate-y-1 active:scale-95 shadow-md"
               >
                 <div className="flex flex-col items-start text-left">
-                  <span className="font-label-bold text-on-primary-container group-hover:text-on-primary uppercase tracking-wider transition-colors">Rapid Camera QR Scan</span>
-                  <span className="text-[10px] text-on-primary-container/70 group-hover:text-on-primary/70 transition-colors">Deploy / return asset via camera</span>
+                  <span className="font-label-bold text-gray-950 uppercase tracking-wider transition-colors">Rapid Camera QR Scan (USP)</span>
+                  <span className="text-[10px] text-gray-800 transition-colors">Point camera or decode QR tag live</span>
                 </div>
-                <span className="material-symbols-outlined text-on-primary-container group-hover:text-on-primary text-[28px] transition-all group-hover:scale-110">qr_code_scanner</span>
+                <span className="material-symbols-outlined text-gray-950 text-[28px] transition-all group-hover:scale-110 font-bold">qr_code_scanner</span>
               </button>
+
               <button 
                 onClick={() => navigate('/alerts')}
                 className="flex items-center justify-between w-full border-2 border-on-surface p-md rounded-lg group hover:bg-error hover:border-error transition-all duration-300 transform hover:-translate-y-1 active:scale-95 shadow-sm hover:shadow-md"
@@ -513,6 +519,14 @@ const Dashboard = () => {
           </section>
         </div>
       </div>
+
+      <CameraQRScannerModal
+        isOpen={isScannerModalOpen}
+        onClose={() => setIsScannerModalOpen(false)}
+        onScanSuccess={(decodedTag) => {
+          navigate(`/check-in-out?tag=${decodedTag}`);
+        }}
+      />
     </div>
   );
 };
