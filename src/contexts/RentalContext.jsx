@@ -11,6 +11,7 @@ import {
   createComplaint as dbCreateComplaint,
 } from '../services/database';
 import { generateBookingQR, generateBookingId } from '../utils/qrUtils';
+import { publishKafkaEvent, KAFKA_TOPICS } from '../services/kafkaService';
 
 export const RentalContext = createContext({});
 
@@ -67,13 +68,13 @@ export const RentalProvider = ({ children }) => {
       jobsite: bookingPayload.jobsite,
       start_date: bookingPayload.start_date,
       end_date: bookingPayload.end_date,
-      transportation_type: bookingPayload.transportation_type, // 'pickup' | 'delivery'
+      transportation_type: bookingPayload.transportation_type,
       estimated_cost: bookingPayload.estimated_cost,
       agreement_accepted: true,
       agreement_timestamp: new Date().toISOString(),
       license_number: bookingPayload.license_number,
       weather_confirmed: bookingPayload.weather_confirmed || false,
-      status: 'confirmed', // 'confirmed' (Awaiting Handover)
+      status: 'PENDING_EMPLOYEE_SCAN', // Requires Employee Camera QR Scan to Accept
       qr_code: qrCode,
       driver_id: null,
       created_at: new Date().toISOString(),
@@ -82,7 +83,15 @@ export const RentalProvider = ({ children }) => {
     setBookings((prev) => [newBooking, ...prev]);
     await dbCreateBooking(newBooking);
 
-    // If transportation is "delivery", create notification event for employee (Section 6.2)
+    // Publish Kafka Event
+    publishKafkaEvent(KAFKA_TOPICS.RENTAL_CHECKIN, {
+      booking_id: bookingId,
+      equipment_id: newBooking.equipment_id,
+      customer_email: newBooking.customer_email,
+      status: 'PENDING_EMPLOYEE_SCAN',
+      msg: `Customer booking created ${bookingId} — awaiting employee camera scan`,
+    });
+
     if (bookingPayload.transportation_type === 'delivery') {
       const newNotif = {
         notification_id: `NOTIF-${Date.now()}`,
@@ -94,7 +103,7 @@ export const RentalProvider = ({ children }) => {
         jobsite: newBooking.jobsite,
         start_date: newBooking.start_date,
         end_date: newBooking.end_date,
-        status: 'pending', // 'pending' | 'driver_assigned'
+        status: 'pending',
         created_at: new Date().toISOString(),
       };
       setNotifications((prev) => [newNotif, ...prev]);
@@ -104,7 +113,7 @@ export const RentalProvider = ({ children }) => {
     return newBooking;
   };
 
-  // Perform QR Handover (Employee side - Section 6.1)
+  // Perform QR Handover (Employee side)
   const processQRHandover = (scannedBookingId) => {
     const booking = bookings.find(
       (b) => (b.booking_id === scannedBookingId || b.id === scannedBookingId)
@@ -114,14 +123,16 @@ export const RentalProvider = ({ children }) => {
       return { success: false, message: `No booking found matching QR Code: ${scannedBookingId}` };
     }
 
-    if (booking.status === 'active') {
-      return { success: false, message: `Booking ${booking.booking_id} is already ACTIVE.` };
+    if (booking.status === 'HANDOVER_ACCEPTED' || booking.status === 'active') {
+      return { success: false, message: `Booking ${booking.booking_id} has ALREADY been scanned and accepted by an employee.` };
     }
 
-    // Update booking status to "active"
+    // Update booking status to "HANDOVER_ACCEPTED"
     setBookings((prev) =>
       prev.map((b) =>
-        b.booking_id === booking.booking_id ? { ...b, status: 'active' } : b
+        b.booking_id === booking.booking_id || b.id === booking.booking_id
+          ? { ...b, status: 'HANDOVER_ACCEPTED', accepted_at: new Date().toISOString() }
+          : b
       )
     );
 
@@ -134,12 +145,21 @@ export const RentalProvider = ({ children }) => {
       )
     );
 
-    dbUpdateBookingStatus(booking.booking_id, 'active');
+    dbUpdateBookingStatus(booking.booking_id, 'HANDOVER_ACCEPTED');
+
+    // Publish Kafka Event
+    publishKafkaEvent(KAFKA_TOPICS.RENTAL_CHECKIN, {
+      booking_id: booking.booking_id,
+      equipment_id: booking.equipment_id,
+      status: 'HANDOVER_ACCEPTED',
+      accepted_by: 'Caterpillar Employee Camera Scan',
+      msg: `✅ QR Code verified & ACCEPTED by employee camera scan for booking ${booking.booking_id}`,
+    });
 
     return {
       success: true,
       booking,
-      message: `Handover successful! Booking ${booking.booking_id} activated. Equipment ${booking.equipment_id} is now IN USE.`,
+      message: `✅ QR Code Verified & Accepted! Booking ${booking.booking_id} activated. Equipment ${booking.equipment_id} released to customer.`,
     };
   };
 

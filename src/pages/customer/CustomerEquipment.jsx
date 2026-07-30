@@ -626,43 +626,61 @@ const CustomerEquipment = () => {
             {/* STEP 4: Success & QR Code Generation (Section 5.3) */}
             {bookingStep === 4 && createdBooking && (
               <div className="p-lg text-center space-y-md">
-                <div className="w-16 h-16 bg-status-success/20 text-status-success rounded-full flex items-center justify-center mx-auto">
-                  <span className="material-symbols-outlined text-4xl">check_circle</span>
-                </div>
+                {createdBooking.status === 'HANDOVER_ACCEPTED' ? (
+                  <div className="w-16 h-16 bg-emerald-500 text-white rounded-full flex items-center justify-center mx-auto shadow-lg animate-bounce">
+                    <span className="material-symbols-outlined text-4xl font-bold">verified</span>
+                  </div>
+                ) : (
+                  <div className="w-16 h-16 bg-amber-500/20 text-amber-600 rounded-full flex items-center justify-center mx-auto animate-pulse">
+                    <span className="material-symbols-outlined text-4xl">qr_code_scanner</span>
+                  </div>
+                )}
 
                 <div>
-                  <span className="px-sm py-1 bg-status-success/15 text-status-success font-label-bold text-xs rounded-full uppercase">
-                    Confirmed — Awaiting Handover
-                  </span>
-                  <h3 className="font-headline-md text-on-surface mt-sm">Rental Transaction Confirmed!</h3>
-                  <p className="text-secondary text-sm">
-                    Your unique handover QR code has been generated and dispatched to{' '}
-                    <strong className="text-on-surface">{createdBooking.customer_email}</strong>.
+                  {createdBooking.status === 'HANDOVER_ACCEPTED' ? (
+                    <span className="px-3 py-1 bg-emerald-500 text-white font-black text-xs rounded-full uppercase tracking-wider shadow-sm">
+                      ✅ ACCEPTED & VERIFIED BY EMPLOYEE CAMERA SCAN
+                    </span>
+                  ) : (
+                    <span className="px-3 py-1 bg-amber-100 text-amber-900 border border-amber-300 font-black text-xs rounded-full uppercase tracking-wider animate-pulse">
+                      ⏳ AWAITING EMPLOYEE CAMERA QR SCAN
+                    </span>
+                  )}
+
+                  <h3 className="font-headline-md text-on-surface mt-sm">
+                    {createdBooking.status === 'HANDOVER_ACCEPTED'
+                      ? 'Handover Complete — Equipment Released!'
+                      : 'Rental QR Code Dispatched'}
+                  </h3>
+                  <p className="text-secondary text-xs max-w-md mx-auto mt-1">
+                    {createdBooking.status === 'HANDOVER_ACCEPTED'
+                      ? `Your QR code was successfully scanned and accepted by an authorized employee.`
+                      : `Present this QR code to the Caterpillar Employee camera scanner. Handover is ONLY accepted once scanned.`}
                   </p>
                 </div>
 
                 {/* Display Generated QR Code */}
                 {createdBooking.qr_code && (
-                  <div className="p-md bg-surface-container-lowest border-2 border-dashed border-outline-variant rounded-xl inline-block shadow-md">
+                  <div className="p-md bg-white border-4 border-gray-900 rounded-xl inline-block shadow-2xl relative group">
                     <img
                       src={createdBooking.qr_code}
                       alt="Rental Handover QR Code"
                       className="w-48 h-48 mx-auto"
                     />
-                    <span className="font-mono text-xs font-bold text-on-surface block mt-xs">
+                    <span className="font-mono text-xs font-black text-gray-900 block mt-xs bg-gray-100 py-1 px-2 rounded border border-gray-300">
                       Booking Ref: {createdBooking.booking_id}
                     </span>
                   </div>
                 )}
 
-                <p className="text-xs text-outline italic max-w-md mx-auto">
-                  Present this QR code to the Caterpillar Field Employee during equipment delivery or yard pickup for scanning and instant activation.
-                </p>
+                <div className="p-sm bg-gray-100 rounded-xl text-[11px] text-gray-700 font-semibold border border-gray-300 max-w-md mx-auto">
+                  🔒 <strong>Security Policy:</strong> This booking cannot be activated automatically. An authorized Caterpillar employee must scan this QR code using their camera terminal to accept the handover.
+                </div>
 
                 <div className="pt-sm">
                   <button
                     onClick={handleCloseModal}
-                    className="px-xl py-sm bg-on-surface text-surface-white font-label-bold rounded-lg hover:bg-primary shadow-md"
+                    className="px-xl py-sm bg-gray-900 hover:bg-black text-[#FFCD00] font-black text-xs rounded-lg shadow-md border border-gray-800"
                   >
                     Done & Return to Fleet
                   </button>
