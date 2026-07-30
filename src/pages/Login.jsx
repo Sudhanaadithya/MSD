@@ -173,13 +173,38 @@ const Login = () => {
             </button>
           </form>
 
-          {/* Employee SSO info */}
-          <div className="mt-lg p-gutter bg-on-primary-fixed/5 rounded-lg border border-outline-variant flex flex-col gap-sm">
-            <div className="flex items-center gap-xs">
-              <span className="material-symbols-outlined text-primary">badge</span>
-              <span className="font-label-bold text-on-surface uppercase tracking-widest text-xs">Employee Portal</span>
+          {/* Demo Account Quick Fill Buttons */}
+          <div className="mt-lg p-md bg-gray-900 text-white rounded-xl border border-gray-800 flex flex-col gap-xs shadow-md">
+            <span className="text-[10px] font-black text-[#FFCD00] uppercase tracking-widest flex items-center gap-1">
+              <span className="material-symbols-outlined text-sm">key</span>
+              Quick Demo Credential Stations
+            </span>
+            <div className="grid grid-cols-2 gap-2 mt-1">
+              <button
+                type="button"
+                onClick={() => {
+                  setEmail('employee@smartrental.com');
+                  setPassword('Password123!');
+                  setAccessType('employee');
+                }}
+                className="px-2.5 py-2 bg-gray-800 hover:bg-[#FFCD00] hover:text-gray-950 text-xs font-bold rounded-lg border border-gray-700 transition-all text-left flex items-center justify-between group"
+              >
+                <span>👷 Employee</span>
+                <span className="text-[9px] text-gray-400 group-hover:text-gray-900 uppercase font-black">Fill</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setEmail('customer@smartrental.com');
+                  setPassword('Password123!');
+                  setAccessType('customer');
+                }}
+                className="px-2.5 py-2 bg-gray-800 hover:bg-[#FFCD00] hover:text-gray-950 text-xs font-bold rounded-lg border border-gray-700 transition-all text-left flex items-center justify-between group"
+              >
+                <span>👤 Customer</span>
+                <span className="text-[9px] text-gray-400 group-hover:text-gray-900 uppercase font-black">Fill</span>
+              </button>
             </div>
-            <p className="font-body-sm text-secondary">Internal staff and field operators should use corporate SSO credentials.</p>
           </div>
 
           {/* Footer Actions */}

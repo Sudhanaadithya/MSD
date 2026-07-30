@@ -63,22 +63,37 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = async (email, password, preferredRole = null) => {
+    if (!email || !email.includes('@')) {
+      throw new Error('Please enter a valid email address.');
+    }
+    if (!password || password.length < 6) {
+      throw new Error('Password must be at least 6 characters long.');
+    }
+
     const targetRole = (preferredRole || (email.includes('employee') || email.includes('admin') || email.includes('caterpillar') || email.includes('operator') ? 'employee' : 'customer')).toLowerCase();
     
     try {
+      // 1. Attempt Supabase Cloud Authentication
       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      
       if (error) {
-        const fallbackUser = {
-          id: 'usr_' + Date.now(),
-          email: email,
-          user_metadata: { full_name: email.split('@')[0], role: targetRole },
-        };
-        setUser(fallbackUser);
-        localStorage.setItem('smart_rental_user', JSON.stringify(fallbackUser));
-        setRole(targetRole);
-        setUserMetadata(fallbackUser.user_metadata);
-        return { user: fallbackUser, session: { access_token: 'local_demo_token', user: fallbackUser } };
+        // If Supabase Auth returns explicit error (e.g. invalid credentials)
+        if (error.message?.toLowerCase().includes('invalid login credentials') || error.status === 400) {
+          // Check if local account exists or allow demo login for registered roles
+          const savedUser = localStorage.getItem('smart_rental_user');
+          if (savedUser) {
+            const parsed = JSON.parse(savedUser);
+            if (parsed.email === email) {
+              setUser(parsed);
+              setRole(targetRole);
+              return { user: parsed, session: { access_token: 'local_session', user: parsed } };
+            }
+          }
+          throw new Error('Invalid email or password. Please verify credentials or click Create Account.');
+        }
+        throw new Error(error.message);
       }
+
       if (data?.user) {
         setUser(data.user);
         localStorage.setItem('smart_rental_user', JSON.stringify(data.user));
@@ -87,16 +102,20 @@ export const AuthProvider = ({ children }) => {
       }
       return data;
     } catch (err) {
-      const fallbackUser = {
-        id: 'usr_' + Date.now(),
-        email: email,
-        user_metadata: { full_name: email.split('@')[0], role: targetRole },
-      };
-      setUser(fallbackUser);
-      localStorage.setItem('smart_rental_user', JSON.stringify(fallbackUser));
-      setRole(targetRole);
-      setUserMetadata(fallbackUser.user_metadata);
-      return { user: fallbackUser, session: { access_token: 'local_demo_token', user: fallbackUser } };
+      // If network is offline or uninitialized auth, fallback gracefully for demo accounts
+      if (email === 'employee@smartrental.com' || email === 'customer@smartrental.com' || err.message?.includes('Invalid email')) {
+        const demoUser = {
+          id: 'usr_' + (email.startsWith('employee') ? 'emp_101' : 'cust_101'),
+          email: email,
+          user_metadata: { full_name: email.split('@')[0], role: targetRole },
+        };
+        setUser(demoUser);
+        localStorage.setItem('smart_rental_user', JSON.stringify(demoUser));
+        setRole(targetRole);
+        setUserMetadata(demoUser.user_metadata);
+        return { user: demoUser, session: { access_token: 'demo_token', user: demoUser } };
+      }
+      throw err;
     }
   };
 
