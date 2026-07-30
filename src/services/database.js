@@ -20,18 +20,3509 @@ const SEED_SITES = [
 ];
 
 const SEED_EQUIPMENT = [
-  { equipment_id: 'EX-402', id: 'EX-402', type: 'Excavator', status: 'Available', site: 'Highway Construction Zone A', sites: { name: 'Highway Construction Zone A' }, rentalDays: '14 Days', operator: 'John D.', image: 'https://images.unsplash.com/photo-1579412690850-bd41cd0af397?auto=format&fit=crop&w=600&q=80' },
-  { equipment_id: 'CR-110', id: 'CR-110', type: 'Crane', status: 'Available', site: 'Metro Rail Extension', sites: { name: 'Metro Rail Extension' }, rentalDays: '42 Days', operator: 'Marcus K.', image: 'https://images.unsplash.com/photo-1541888946425-d0fbb186a5b3?auto=format&fit=crop&w=600&q=80' },
-  { equipment_id: 'BD-088', id: 'BD-088', type: 'Bulldozer', status: 'Available', site: 'Industrial Park', sites: { name: 'Industrial Park' }, rentalDays: '--', operator: 'Unassigned', image: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=600&q=80' },
-  { equipment_id: 'EX-405', id: 'EX-405', type: 'Excavator', status: 'Available', site: 'Highway Construction Zone A', sites: { name: 'Highway Construction Zone A' }, rentalDays: '5 Days', operator: 'Sarah L.', image: 'https://images.unsplash.com/photo-1579412690850-bd41cd0af397?auto=format&fit=crop&w=600&q=80' },
-  { equipment_id: 'LD-099', id: 'LD-099', type: 'Loader', status: 'Available', site: 'Sector 7 Expansion', sites: { name: 'Sector 7 Expansion' }, rentalDays: '--', operator: 'Unassigned', image: 'https://images.unsplash.com/photo-1581092335397-9583fe92d232?auto=format&fit=crop&w=600&q=80' },
-  { equipment_id: 'GR-201', id: 'GR-201', type: 'Grader', status: 'Available', site: 'River Dam Site', sites: { name: 'River Dam Site' }, rentalDays: '10 Days', operator: 'Robert T.', image: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=600&q=80' },
+  {
+    "equipment_id": "EQX1001",
+    "id": "EQX1001",
+    "type": "Excavator",
+    "status": "In Use",
+    "site": "Site S003",
+    "sites": {
+      "name": "Site S003"
+    },
+    "rentalDays": "15 Days",
+    "operator": "Operator OP101",
+    "current_site_id": "S003"
+  },
+  {
+    "equipment_id": "EQX1002",
+    "id": "EQX1002",
+    "type": "Crane",
+    "status": "Available",
+    "site": "Unassigned Site Pool",
+    "sites": {
+      "name": "Unassigned Site Pool"
+    },
+    "rentalDays": "20 Days",
+    "operator": "Unassigned",
+    "current_site_id": null
+  },
+  {
+    "equipment_id": "EQX1003",
+    "id": "EQX1003",
+    "type": "Bulldozer",
+    "status": "Active",
+    "site": "Site S002",
+    "sites": {
+      "name": "Site S002"
+    },
+    "rentalDays": "25 Days",
+    "operator": "Operator OP203",
+    "current_site_id": "S002"
+  },
+  {
+    "equipment_id": "EQX1004",
+    "id": "EQX1004",
+    "type": "Excavator",
+    "status": "In Use",
+    "site": "Site S004",
+    "sites": {
+      "name": "Site S004"
+    },
+    "rentalDays": "10 Days",
+    "operator": "Operator OP106",
+    "current_site_id": "S004"
+  },
+  {
+    "equipment_id": "EQX1005",
+    "id": "EQX1005",
+    "type": "Bulldozer",
+    "status": "Active",
+    "site": "Site S006",
+    "sites": {
+      "name": "Site S006"
+    },
+    "rentalDays": "30 Days",
+    "operator": "Operator OP301",
+    "current_site_id": "S006"
+  },
+  {
+    "equipment_id": "EQX1006",
+    "id": "EQX1006",
+    "type": "Grader",
+    "status": "In Use",
+    "site": "Site S001",
+    "sites": {
+      "name": "Site S001"
+    },
+    "rentalDays": "18 Days",
+    "operator": "Operator OP114",
+    "current_site_id": "S001"
+  },
+  {
+    "equipment_id": "EQX1007",
+    "id": "EQX1007",
+    "type": "Excavator",
+    "status": "Available",
+    "site": "Unassigned Site Pool",
+    "sites": {
+      "name": "Unassigned Site Pool"
+    },
+    "rentalDays": "12 Days",
+    "operator": "Unassigned",
+    "current_site_id": null
+  },
+  {
+    "equipment_id": "EQX1008",
+    "id": "EQX1008",
+    "type": "Excavator",
+    "status": "In Use",
+    "site": "Site S001",
+    "sites": {
+      "name": "Site S001"
+    },
+    "rentalDays": "3 Days",
+    "operator": "Operator OP101",
+    "current_site_id": "S001"
+  },
+  {
+    "equipment_id": "EQX1009",
+    "id": "EQX1009",
+    "type": "Crane",
+    "status": "In Use",
+    "site": "Site S002",
+    "sites": {
+      "name": "Site S002"
+    },
+    "rentalDays": "4 Days",
+    "operator": "Operator OP102",
+    "current_site_id": "S002"
+  },
+  {
+    "equipment_id": "EQX1010",
+    "id": "EQX1010",
+    "type": "Bulldozer",
+    "status": "Active",
+    "site": "Site S003",
+    "sites": {
+      "name": "Site S003"
+    },
+    "rentalDays": "5 Days",
+    "operator": "Operator OP103",
+    "current_site_id": "S003"
+  },
+  {
+    "equipment_id": "EQX1011",
+    "id": "EQX1011",
+    "type": "Grader",
+    "status": "In Use",
+    "site": "Site S004",
+    "sites": {
+      "name": "Site S004"
+    },
+    "rentalDays": "6 Days",
+    "operator": "Operator OP106",
+    "current_site_id": "S004"
+  },
+  {
+    "equipment_id": "EQX1012",
+    "id": "EQX1012",
+    "type": "Loader",
+    "status": "In Use",
+    "site": "Site S005",
+    "sites": {
+      "name": "Site S005"
+    },
+    "rentalDays": "7 Days",
+    "operator": "Operator OP114",
+    "current_site_id": "S005"
+  },
+  {
+    "equipment_id": "EQX1013",
+    "id": "EQX1013",
+    "type": "Dump Truck",
+    "status": "Active",
+    "site": "Site S006",
+    "sites": {
+      "name": "Site S006"
+    },
+    "rentalDays": "8 Days",
+    "operator": "Operator OP203",
+    "current_site_id": "S006"
+  },
+  {
+    "equipment_id": "EQX1014",
+    "id": "EQX1014",
+    "type": "Backhoe",
+    "status": "In Use",
+    "site": "Site S007",
+    "sites": {
+      "name": "Site S007"
+    },
+    "rentalDays": "9 Days",
+    "operator": "Operator OP205",
+    "current_site_id": "S007"
+  },
+  {
+    "equipment_id": "EQX1015",
+    "id": "EQX1015",
+    "type": "Forklift",
+    "status": "In Use",
+    "site": "Site S008",
+    "sites": {
+      "name": "Site S008"
+    },
+    "rentalDays": "10 Days",
+    "operator": "Operator OP301",
+    "current_site_id": "S008"
+  },
+  {
+    "equipment_id": "EQX1016",
+    "id": "EQX1016",
+    "type": "Compactor",
+    "status": "Available",
+    "site": "Unassigned Site Pool",
+    "sites": {
+      "name": "Unassigned Site Pool"
+    },
+    "rentalDays": "11 Days",
+    "operator": "Operator OP308",
+    "current_site_id": null
+  },
+  {
+    "equipment_id": "EQX1017",
+    "id": "EQX1017",
+    "type": "Skid Steer",
+    "status": "In Use",
+    "site": "Site S001",
+    "sites": {
+      "name": "Site S001"
+    },
+    "rentalDays": "12 Days",
+    "operator": "Unassigned",
+    "current_site_id": "S001"
+  },
+  {
+    "equipment_id": "EQX1018",
+    "id": "EQX1018",
+    "type": "Excavator",
+    "status": "In Use",
+    "site": "Site S002",
+    "sites": {
+      "name": "Site S002"
+    },
+    "rentalDays": "13 Days",
+    "operator": "Operator OP101",
+    "current_site_id": "S002"
+  },
+  {
+    "equipment_id": "EQX1019",
+    "id": "EQX1019",
+    "type": "Crane",
+    "status": "Active",
+    "site": "Site S003",
+    "sites": {
+      "name": "Site S003"
+    },
+    "rentalDays": "14 Days",
+    "operator": "Operator OP102",
+    "current_site_id": "S003"
+  },
+  {
+    "equipment_id": "EQX1020",
+    "id": "EQX1020",
+    "type": "Bulldozer",
+    "status": "In Use",
+    "site": "Site S004",
+    "sites": {
+      "name": "Site S004"
+    },
+    "rentalDays": "15 Days",
+    "operator": "Operator OP103",
+    "current_site_id": "S004"
+  },
+  {
+    "equipment_id": "EQX1021",
+    "id": "EQX1021",
+    "type": "Grader",
+    "status": "In Use",
+    "site": "Site S005",
+    "sites": {
+      "name": "Site S005"
+    },
+    "rentalDays": "16 Days",
+    "operator": "Operator OP106",
+    "current_site_id": "S005"
+  },
+  {
+    "equipment_id": "EQX1022",
+    "id": "EQX1022",
+    "type": "Loader",
+    "status": "Active",
+    "site": "Site S006",
+    "sites": {
+      "name": "Site S006"
+    },
+    "rentalDays": "17 Days",
+    "operator": "Operator OP114",
+    "current_site_id": "S006"
+  },
+  {
+    "equipment_id": "EQX1023",
+    "id": "EQX1023",
+    "type": "Dump Truck",
+    "status": "In Use",
+    "site": "Site S007",
+    "sites": {
+      "name": "Site S007"
+    },
+    "rentalDays": "18 Days",
+    "operator": "Operator OP203",
+    "current_site_id": "S007"
+  },
+  {
+    "equipment_id": "EQX1024",
+    "id": "EQX1024",
+    "type": "Backhoe",
+    "status": "In Use",
+    "site": "Site S008",
+    "sites": {
+      "name": "Site S008"
+    },
+    "rentalDays": "19 Days",
+    "operator": "Operator OP205",
+    "current_site_id": "S008"
+  },
+  {
+    "equipment_id": "EQX1025",
+    "id": "EQX1025",
+    "type": "Forklift",
+    "status": "Available",
+    "site": "Unassigned Site Pool",
+    "sites": {
+      "name": "Unassigned Site Pool"
+    },
+    "rentalDays": "20 Days",
+    "operator": "Operator OP301",
+    "current_site_id": null
+  },
+  {
+    "equipment_id": "EQX1026",
+    "id": "EQX1026",
+    "type": "Compactor",
+    "status": "In Use",
+    "site": "Site S001",
+    "sites": {
+      "name": "Site S001"
+    },
+    "rentalDays": "21 Days",
+    "operator": "Operator OP308",
+    "current_site_id": "S001"
+  },
+  {
+    "equipment_id": "EQX1027",
+    "id": "EQX1027",
+    "type": "Skid Steer",
+    "status": "In Use",
+    "site": "Site S002",
+    "sites": {
+      "name": "Site S002"
+    },
+    "rentalDays": "22 Days",
+    "operator": "Unassigned",
+    "current_site_id": "S002"
+  },
+  {
+    "equipment_id": "EQX1028",
+    "id": "EQX1028",
+    "type": "Excavator",
+    "status": "Active",
+    "site": "Site S003",
+    "sites": {
+      "name": "Site S003"
+    },
+    "rentalDays": "23 Days",
+    "operator": "Operator OP101",
+    "current_site_id": "S003"
+  },
+  {
+    "equipment_id": "EQX1029",
+    "id": "EQX1029",
+    "type": "Crane",
+    "status": "In Use",
+    "site": "Site S004",
+    "sites": {
+      "name": "Site S004"
+    },
+    "rentalDays": "24 Days",
+    "operator": "Operator OP102",
+    "current_site_id": "S004"
+  },
+  {
+    "equipment_id": "EQX1030",
+    "id": "EQX1030",
+    "type": "Bulldozer",
+    "status": "In Use",
+    "site": "Site S005",
+    "sites": {
+      "name": "Site S005"
+    },
+    "rentalDays": "25 Days",
+    "operator": "Operator OP103",
+    "current_site_id": "S005"
+  },
+  {
+    "equipment_id": "EQX1031",
+    "id": "EQX1031",
+    "type": "Grader",
+    "status": "Active",
+    "site": "Site S006",
+    "sites": {
+      "name": "Site S006"
+    },
+    "rentalDays": "26 Days",
+    "operator": "Operator OP106",
+    "current_site_id": "S006"
+  },
+  {
+    "equipment_id": "EQX1032",
+    "id": "EQX1032",
+    "type": "Loader",
+    "status": "In Use",
+    "site": "Site S007",
+    "sites": {
+      "name": "Site S007"
+    },
+    "rentalDays": "27 Days",
+    "operator": "Operator OP114",
+    "current_site_id": "S007"
+  },
+  {
+    "equipment_id": "EQX1033",
+    "id": "EQX1033",
+    "type": "Dump Truck",
+    "status": "In Use",
+    "site": "Site S008",
+    "sites": {
+      "name": "Site S008"
+    },
+    "rentalDays": "28 Days",
+    "operator": "Operator OP203",
+    "current_site_id": "S008"
+  },
+  {
+    "equipment_id": "EQX1034",
+    "id": "EQX1034",
+    "type": "Backhoe",
+    "status": "Available",
+    "site": "Unassigned Site Pool",
+    "sites": {
+      "name": "Unassigned Site Pool"
+    },
+    "rentalDays": "29 Days",
+    "operator": "Operator OP205",
+    "current_site_id": null
+  },
+  {
+    "equipment_id": "EQX1035",
+    "id": "EQX1035",
+    "type": "Forklift",
+    "status": "In Use",
+    "site": "Site S001",
+    "sites": {
+      "name": "Site S001"
+    },
+    "rentalDays": "30 Days",
+    "operator": "Operator OP301",
+    "current_site_id": "S001"
+  },
+  {
+    "equipment_id": "EQX1036",
+    "id": "EQX1036",
+    "type": "Compactor",
+    "status": "In Use",
+    "site": "Site S002",
+    "sites": {
+      "name": "Site S002"
+    },
+    "rentalDays": "3 Days",
+    "operator": "Operator OP308",
+    "current_site_id": "S002"
+  },
+  {
+    "equipment_id": "EQX1037",
+    "id": "EQX1037",
+    "type": "Skid Steer",
+    "status": "Active",
+    "site": "Site S003",
+    "sites": {
+      "name": "Site S003"
+    },
+    "rentalDays": "4 Days",
+    "operator": "Unassigned",
+    "current_site_id": "S003"
+  },
+  {
+    "equipment_id": "EQX1038",
+    "id": "EQX1038",
+    "type": "Excavator",
+    "status": "In Use",
+    "site": "Site S004",
+    "sites": {
+      "name": "Site S004"
+    },
+    "rentalDays": "5 Days",
+    "operator": "Operator OP101",
+    "current_site_id": "S004"
+  },
+  {
+    "equipment_id": "EQX1039",
+    "id": "EQX1039",
+    "type": "Crane",
+    "status": "In Use",
+    "site": "Site S005",
+    "sites": {
+      "name": "Site S005"
+    },
+    "rentalDays": "6 Days",
+    "operator": "Operator OP102",
+    "current_site_id": "S005"
+  },
+  {
+    "equipment_id": "EQX1040",
+    "id": "EQX1040",
+    "type": "Bulldozer",
+    "status": "Active",
+    "site": "Site S006",
+    "sites": {
+      "name": "Site S006"
+    },
+    "rentalDays": "7 Days",
+    "operator": "Operator OP103",
+    "current_site_id": "S006"
+  },
+  {
+    "equipment_id": "EQX1041",
+    "id": "EQX1041",
+    "type": "Grader",
+    "status": "In Use",
+    "site": "Site S007",
+    "sites": {
+      "name": "Site S007"
+    },
+    "rentalDays": "8 Days",
+    "operator": "Operator OP106",
+    "current_site_id": "S007"
+  },
+  {
+    "equipment_id": "EQX1042",
+    "id": "EQX1042",
+    "type": "Loader",
+    "status": "In Use",
+    "site": "Site S008",
+    "sites": {
+      "name": "Site S008"
+    },
+    "rentalDays": "9 Days",
+    "operator": "Operator OP114",
+    "current_site_id": "S008"
+  },
+  {
+    "equipment_id": "EQX1043",
+    "id": "EQX1043",
+    "type": "Dump Truck",
+    "status": "Available",
+    "site": "Unassigned Site Pool",
+    "sites": {
+      "name": "Unassigned Site Pool"
+    },
+    "rentalDays": "10 Days",
+    "operator": "Operator OP203",
+    "current_site_id": null
+  },
+  {
+    "equipment_id": "EQX1044",
+    "id": "EQX1044",
+    "type": "Backhoe",
+    "status": "In Use",
+    "site": "Site S001",
+    "sites": {
+      "name": "Site S001"
+    },
+    "rentalDays": "11 Days",
+    "operator": "Operator OP205",
+    "current_site_id": "S001"
+  },
+  {
+    "equipment_id": "EQX1045",
+    "id": "EQX1045",
+    "type": "Forklift",
+    "status": "In Use",
+    "site": "Site S002",
+    "sites": {
+      "name": "Site S002"
+    },
+    "rentalDays": "12 Days",
+    "operator": "Operator OP301",
+    "current_site_id": "S002"
+  },
+  {
+    "equipment_id": "EQX1046",
+    "id": "EQX1046",
+    "type": "Compactor",
+    "status": "Active",
+    "site": "Site S003",
+    "sites": {
+      "name": "Site S003"
+    },
+    "rentalDays": "13 Days",
+    "operator": "Operator OP308",
+    "current_site_id": "S003"
+  },
+  {
+    "equipment_id": "EQX1047",
+    "id": "EQX1047",
+    "type": "Skid Steer",
+    "status": "In Use",
+    "site": "Site S004",
+    "sites": {
+      "name": "Site S004"
+    },
+    "rentalDays": "14 Days",
+    "operator": "Unassigned",
+    "current_site_id": "S004"
+  },
+  {
+    "equipment_id": "EQX1048",
+    "id": "EQX1048",
+    "type": "Excavator",
+    "status": "In Use",
+    "site": "Site S005",
+    "sites": {
+      "name": "Site S005"
+    },
+    "rentalDays": "15 Days",
+    "operator": "Operator OP101",
+    "current_site_id": "S005"
+  },
+  {
+    "equipment_id": "EQX1049",
+    "id": "EQX1049",
+    "type": "Crane",
+    "status": "Active",
+    "site": "Site S006",
+    "sites": {
+      "name": "Site S006"
+    },
+    "rentalDays": "16 Days",
+    "operator": "Operator OP102",
+    "current_site_id": "S006"
+  },
+  {
+    "equipment_id": "EQX1050",
+    "id": "EQX1050",
+    "type": "Bulldozer",
+    "status": "In Use",
+    "site": "Site S007",
+    "sites": {
+      "name": "Site S007"
+    },
+    "rentalDays": "17 Days",
+    "operator": "Operator OP103",
+    "current_site_id": "S007"
+  },
+  {
+    "equipment_id": "EQX1051",
+    "id": "EQX1051",
+    "type": "Grader",
+    "status": "In Use",
+    "site": "Site S008",
+    "sites": {
+      "name": "Site S008"
+    },
+    "rentalDays": "18 Days",
+    "operator": "Operator OP106",
+    "current_site_id": "S008"
+  },
+  {
+    "equipment_id": "EQX1052",
+    "id": "EQX1052",
+    "type": "Loader",
+    "status": "Available",
+    "site": "Unassigned Site Pool",
+    "sites": {
+      "name": "Unassigned Site Pool"
+    },
+    "rentalDays": "19 Days",
+    "operator": "Operator OP114",
+    "current_site_id": null
+  },
+  {
+    "equipment_id": "EQX1053",
+    "id": "EQX1053",
+    "type": "Dump Truck",
+    "status": "In Use",
+    "site": "Site S001",
+    "sites": {
+      "name": "Site S001"
+    },
+    "rentalDays": "20 Days",
+    "operator": "Operator OP203",
+    "current_site_id": "S001"
+  },
+  {
+    "equipment_id": "EQX1054",
+    "id": "EQX1054",
+    "type": "Backhoe",
+    "status": "In Use",
+    "site": "Site S002",
+    "sites": {
+      "name": "Site S002"
+    },
+    "rentalDays": "21 Days",
+    "operator": "Operator OP205",
+    "current_site_id": "S002"
+  },
+  {
+    "equipment_id": "EQX1055",
+    "id": "EQX1055",
+    "type": "Forklift",
+    "status": "Active",
+    "site": "Site S003",
+    "sites": {
+      "name": "Site S003"
+    },
+    "rentalDays": "22 Days",
+    "operator": "Operator OP301",
+    "current_site_id": "S003"
+  },
+  {
+    "equipment_id": "EQX1056",
+    "id": "EQX1056",
+    "type": "Compactor",
+    "status": "In Use",
+    "site": "Site S004",
+    "sites": {
+      "name": "Site S004"
+    },
+    "rentalDays": "23 Days",
+    "operator": "Operator OP308",
+    "current_site_id": "S004"
+  },
+  {
+    "equipment_id": "EQX1057",
+    "id": "EQX1057",
+    "type": "Skid Steer",
+    "status": "In Use",
+    "site": "Site S005",
+    "sites": {
+      "name": "Site S005"
+    },
+    "rentalDays": "24 Days",
+    "operator": "Unassigned",
+    "current_site_id": "S005"
+  },
+  {
+    "equipment_id": "EQX1058",
+    "id": "EQX1058",
+    "type": "Excavator",
+    "status": "Active",
+    "site": "Site S006",
+    "sites": {
+      "name": "Site S006"
+    },
+    "rentalDays": "25 Days",
+    "operator": "Operator OP101",
+    "current_site_id": "S006"
+  },
+  {
+    "equipment_id": "EQX1059",
+    "id": "EQX1059",
+    "type": "Crane",
+    "status": "In Use",
+    "site": "Site S007",
+    "sites": {
+      "name": "Site S007"
+    },
+    "rentalDays": "26 Days",
+    "operator": "Operator OP102",
+    "current_site_id": "S007"
+  },
+  {
+    "equipment_id": "EQX1060",
+    "id": "EQX1060",
+    "type": "Bulldozer",
+    "status": "In Use",
+    "site": "Site S008",
+    "sites": {
+      "name": "Site S008"
+    },
+    "rentalDays": "27 Days",
+    "operator": "Operator OP103",
+    "current_site_id": "S008"
+  },
+  {
+    "equipment_id": "EQX1061",
+    "id": "EQX1061",
+    "type": "Grader",
+    "status": "Available",
+    "site": "Unassigned Site Pool",
+    "sites": {
+      "name": "Unassigned Site Pool"
+    },
+    "rentalDays": "28 Days",
+    "operator": "Operator OP106",
+    "current_site_id": null
+  },
+  {
+    "equipment_id": "EQX1062",
+    "id": "EQX1062",
+    "type": "Loader",
+    "status": "In Use",
+    "site": "Site S001",
+    "sites": {
+      "name": "Site S001"
+    },
+    "rentalDays": "29 Days",
+    "operator": "Operator OP114",
+    "current_site_id": "S001"
+  },
+  {
+    "equipment_id": "EQX1063",
+    "id": "EQX1063",
+    "type": "Dump Truck",
+    "status": "In Use",
+    "site": "Site S002",
+    "sites": {
+      "name": "Site S002"
+    },
+    "rentalDays": "30 Days",
+    "operator": "Operator OP203",
+    "current_site_id": "S002"
+  },
+  {
+    "equipment_id": "EQX1064",
+    "id": "EQX1064",
+    "type": "Backhoe",
+    "status": "Active",
+    "site": "Site S003",
+    "sites": {
+      "name": "Site S003"
+    },
+    "rentalDays": "3 Days",
+    "operator": "Operator OP205",
+    "current_site_id": "S003"
+  },
+  {
+    "equipment_id": "EQX1065",
+    "id": "EQX1065",
+    "type": "Forklift",
+    "status": "In Use",
+    "site": "Site S004",
+    "sites": {
+      "name": "Site S004"
+    },
+    "rentalDays": "4 Days",
+    "operator": "Operator OP301",
+    "current_site_id": "S004"
+  },
+  {
+    "equipment_id": "EQX1066",
+    "id": "EQX1066",
+    "type": "Compactor",
+    "status": "In Use",
+    "site": "Site S005",
+    "sites": {
+      "name": "Site S005"
+    },
+    "rentalDays": "5 Days",
+    "operator": "Operator OP308",
+    "current_site_id": "S005"
+  },
+  {
+    "equipment_id": "EQX1067",
+    "id": "EQX1067",
+    "type": "Skid Steer",
+    "status": "Active",
+    "site": "Site S006",
+    "sites": {
+      "name": "Site S006"
+    },
+    "rentalDays": "6 Days",
+    "operator": "Unassigned",
+    "current_site_id": "S006"
+  },
+  {
+    "equipment_id": "EQX1068",
+    "id": "EQX1068",
+    "type": "Excavator",
+    "status": "In Use",
+    "site": "Site S007",
+    "sites": {
+      "name": "Site S007"
+    },
+    "rentalDays": "7 Days",
+    "operator": "Operator OP101",
+    "current_site_id": "S007"
+  },
+  {
+    "equipment_id": "EQX1069",
+    "id": "EQX1069",
+    "type": "Crane",
+    "status": "In Use",
+    "site": "Site S008",
+    "sites": {
+      "name": "Site S008"
+    },
+    "rentalDays": "8 Days",
+    "operator": "Operator OP102",
+    "current_site_id": "S008"
+  },
+  {
+    "equipment_id": "EQX1070",
+    "id": "EQX1070",
+    "type": "Bulldozer",
+    "status": "Available",
+    "site": "Unassigned Site Pool",
+    "sites": {
+      "name": "Unassigned Site Pool"
+    },
+    "rentalDays": "9 Days",
+    "operator": "Operator OP103",
+    "current_site_id": null
+  },
+  {
+    "equipment_id": "EQX1071",
+    "id": "EQX1071",
+    "type": "Grader",
+    "status": "In Use",
+    "site": "Site S001",
+    "sites": {
+      "name": "Site S001"
+    },
+    "rentalDays": "10 Days",
+    "operator": "Operator OP106",
+    "current_site_id": "S001"
+  },
+  {
+    "equipment_id": "EQX1072",
+    "id": "EQX1072",
+    "type": "Loader",
+    "status": "In Use",
+    "site": "Site S002",
+    "sites": {
+      "name": "Site S002"
+    },
+    "rentalDays": "11 Days",
+    "operator": "Operator OP114",
+    "current_site_id": "S002"
+  },
+  {
+    "equipment_id": "EQX1073",
+    "id": "EQX1073",
+    "type": "Dump Truck",
+    "status": "Active",
+    "site": "Site S003",
+    "sites": {
+      "name": "Site S003"
+    },
+    "rentalDays": "12 Days",
+    "operator": "Operator OP203",
+    "current_site_id": "S003"
+  },
+  {
+    "equipment_id": "EQX1074",
+    "id": "EQX1074",
+    "type": "Backhoe",
+    "status": "In Use",
+    "site": "Site S004",
+    "sites": {
+      "name": "Site S004"
+    },
+    "rentalDays": "13 Days",
+    "operator": "Operator OP205",
+    "current_site_id": "S004"
+  },
+  {
+    "equipment_id": "EQX1075",
+    "id": "EQX1075",
+    "type": "Forklift",
+    "status": "In Use",
+    "site": "Site S005",
+    "sites": {
+      "name": "Site S005"
+    },
+    "rentalDays": "14 Days",
+    "operator": "Operator OP301",
+    "current_site_id": "S005"
+  },
+  {
+    "equipment_id": "EQX1076",
+    "id": "EQX1076",
+    "type": "Compactor",
+    "status": "Active",
+    "site": "Site S006",
+    "sites": {
+      "name": "Site S006"
+    },
+    "rentalDays": "15 Days",
+    "operator": "Operator OP308",
+    "current_site_id": "S006"
+  },
+  {
+    "equipment_id": "EQX1077",
+    "id": "EQX1077",
+    "type": "Skid Steer",
+    "status": "In Use",
+    "site": "Site S007",
+    "sites": {
+      "name": "Site S007"
+    },
+    "rentalDays": "16 Days",
+    "operator": "Unassigned",
+    "current_site_id": "S007"
+  },
+  {
+    "equipment_id": "EQX1078",
+    "id": "EQX1078",
+    "type": "Excavator",
+    "status": "In Use",
+    "site": "Site S008",
+    "sites": {
+      "name": "Site S008"
+    },
+    "rentalDays": "17 Days",
+    "operator": "Operator OP101",
+    "current_site_id": "S008"
+  },
+  {
+    "equipment_id": "EQX1079",
+    "id": "EQX1079",
+    "type": "Crane",
+    "status": "Available",
+    "site": "Unassigned Site Pool",
+    "sites": {
+      "name": "Unassigned Site Pool"
+    },
+    "rentalDays": "18 Days",
+    "operator": "Operator OP102",
+    "current_site_id": null
+  },
+  {
+    "equipment_id": "EQX1080",
+    "id": "EQX1080",
+    "type": "Bulldozer",
+    "status": "In Use",
+    "site": "Site S001",
+    "sites": {
+      "name": "Site S001"
+    },
+    "rentalDays": "19 Days",
+    "operator": "Operator OP103",
+    "current_site_id": "S001"
+  },
+  {
+    "equipment_id": "EQX1081",
+    "id": "EQX1081",
+    "type": "Grader",
+    "status": "In Use",
+    "site": "Site S002",
+    "sites": {
+      "name": "Site S002"
+    },
+    "rentalDays": "20 Days",
+    "operator": "Operator OP106",
+    "current_site_id": "S002"
+  },
+  {
+    "equipment_id": "EQX1082",
+    "id": "EQX1082",
+    "type": "Loader",
+    "status": "Active",
+    "site": "Site S003",
+    "sites": {
+      "name": "Site S003"
+    },
+    "rentalDays": "21 Days",
+    "operator": "Operator OP114",
+    "current_site_id": "S003"
+  },
+  {
+    "equipment_id": "EQX1083",
+    "id": "EQX1083",
+    "type": "Dump Truck",
+    "status": "In Use",
+    "site": "Site S004",
+    "sites": {
+      "name": "Site S004"
+    },
+    "rentalDays": "22 Days",
+    "operator": "Operator OP203",
+    "current_site_id": "S004"
+  },
+  {
+    "equipment_id": "EQX1084",
+    "id": "EQX1084",
+    "type": "Backhoe",
+    "status": "In Use",
+    "site": "Site S005",
+    "sites": {
+      "name": "Site S005"
+    },
+    "rentalDays": "23 Days",
+    "operator": "Operator OP205",
+    "current_site_id": "S005"
+  },
+  {
+    "equipment_id": "EQX1085",
+    "id": "EQX1085",
+    "type": "Forklift",
+    "status": "Active",
+    "site": "Site S006",
+    "sites": {
+      "name": "Site S006"
+    },
+    "rentalDays": "24 Days",
+    "operator": "Operator OP301",
+    "current_site_id": "S006"
+  },
+  {
+    "equipment_id": "EQX1086",
+    "id": "EQX1086",
+    "type": "Compactor",
+    "status": "In Use",
+    "site": "Site S007",
+    "sites": {
+      "name": "Site S007"
+    },
+    "rentalDays": "25 Days",
+    "operator": "Operator OP308",
+    "current_site_id": "S007"
+  },
+  {
+    "equipment_id": "EQX1087",
+    "id": "EQX1087",
+    "type": "Skid Steer",
+    "status": "In Use",
+    "site": "Site S008",
+    "sites": {
+      "name": "Site S008"
+    },
+    "rentalDays": "26 Days",
+    "operator": "Unassigned",
+    "current_site_id": "S008"
+  },
+  {
+    "equipment_id": "EQX1088",
+    "id": "EQX1088",
+    "type": "Excavator",
+    "status": "Available",
+    "site": "Unassigned Site Pool",
+    "sites": {
+      "name": "Unassigned Site Pool"
+    },
+    "rentalDays": "27 Days",
+    "operator": "Operator OP101",
+    "current_site_id": null
+  },
+  {
+    "equipment_id": "EQX1089",
+    "id": "EQX1089",
+    "type": "Crane",
+    "status": "In Use",
+    "site": "Site S001",
+    "sites": {
+      "name": "Site S001"
+    },
+    "rentalDays": "28 Days",
+    "operator": "Operator OP102",
+    "current_site_id": "S001"
+  },
+  {
+    "equipment_id": "EQX1090",
+    "id": "EQX1090",
+    "type": "Bulldozer",
+    "status": "In Use",
+    "site": "Site S002",
+    "sites": {
+      "name": "Site S002"
+    },
+    "rentalDays": "29 Days",
+    "operator": "Operator OP103",
+    "current_site_id": "S002"
+  },
+  {
+    "equipment_id": "EQX1091",
+    "id": "EQX1091",
+    "type": "Grader",
+    "status": "Active",
+    "site": "Site S003",
+    "sites": {
+      "name": "Site S003"
+    },
+    "rentalDays": "30 Days",
+    "operator": "Operator OP106",
+    "current_site_id": "S003"
+  },
+  {
+    "equipment_id": "EQX1092",
+    "id": "EQX1092",
+    "type": "Loader",
+    "status": "In Use",
+    "site": "Site S004",
+    "sites": {
+      "name": "Site S004"
+    },
+    "rentalDays": "3 Days",
+    "operator": "Operator OP114",
+    "current_site_id": "S004"
+  },
+  {
+    "equipment_id": "EQX1093",
+    "id": "EQX1093",
+    "type": "Dump Truck",
+    "status": "In Use",
+    "site": "Site S005",
+    "sites": {
+      "name": "Site S005"
+    },
+    "rentalDays": "4 Days",
+    "operator": "Operator OP203",
+    "current_site_id": "S005"
+  },
+  {
+    "equipment_id": "EQX1094",
+    "id": "EQX1094",
+    "type": "Backhoe",
+    "status": "Active",
+    "site": "Site S006",
+    "sites": {
+      "name": "Site S006"
+    },
+    "rentalDays": "5 Days",
+    "operator": "Operator OP205",
+    "current_site_id": "S006"
+  },
+  {
+    "equipment_id": "EQX1095",
+    "id": "EQX1095",
+    "type": "Forklift",
+    "status": "In Use",
+    "site": "Site S007",
+    "sites": {
+      "name": "Site S007"
+    },
+    "rentalDays": "6 Days",
+    "operator": "Operator OP301",
+    "current_site_id": "S007"
+  },
+  {
+    "equipment_id": "EQX1096",
+    "id": "EQX1096",
+    "type": "Compactor",
+    "status": "In Use",
+    "site": "Site S008",
+    "sites": {
+      "name": "Site S008"
+    },
+    "rentalDays": "7 Days",
+    "operator": "Operator OP308",
+    "current_site_id": "S008"
+  },
+  {
+    "equipment_id": "EQX1097",
+    "id": "EQX1097",
+    "type": "Skid Steer",
+    "status": "Available",
+    "site": "Unassigned Site Pool",
+    "sites": {
+      "name": "Unassigned Site Pool"
+    },
+    "rentalDays": "8 Days",
+    "operator": "Unassigned",
+    "current_site_id": null
+  },
+  {
+    "equipment_id": "EQX1098",
+    "id": "EQX1098",
+    "type": "Excavator",
+    "status": "In Use",
+    "site": "Site S001",
+    "sites": {
+      "name": "Site S001"
+    },
+    "rentalDays": "9 Days",
+    "operator": "Operator OP101",
+    "current_site_id": "S001"
+  },
+  {
+    "equipment_id": "EQX1099",
+    "id": "EQX1099",
+    "type": "Crane",
+    "status": "In Use",
+    "site": "Site S002",
+    "sites": {
+      "name": "Site S002"
+    },
+    "rentalDays": "10 Days",
+    "operator": "Operator OP102",
+    "current_site_id": "S002"
+  },
+  {
+    "equipment_id": "EQX1100",
+    "id": "EQX1100",
+    "type": "Bulldozer",
+    "status": "Active",
+    "site": "Site S003",
+    "sites": {
+      "name": "Site S003"
+    },
+    "rentalDays": "11 Days",
+    "operator": "Operator OP103",
+    "current_site_id": "S003"
+  }
 ];
 
 const SEED_RENTALS = [
-  { id: 'R-1001', equipment_id: 'EX-402', site_id: 'S001', operator_id: 'OP101', check_in_date: '2025-03-01', engine_hours_day: 8.5, idle_hours_day: 1.2, equipment: { type: 'Excavator', status: 'Active' }, sites: { name: 'Highway Zone A' }, operators: { name: 'John D.' } },
-  { id: 'R-1002', equipment_id: 'CR-110', site_id: 'S002', operator_id: 'OP102', check_in_date: '2025-02-15', engine_hours_day: 6.0, idle_hours_day: 4.5, equipment: { type: 'Crane', status: 'Overdue' }, sites: { name: 'Metro Extension' }, operators: { name: 'Marcus K.' } },
-  { id: 'R-1003', equipment_id: 'EX-405', site_id: 'S001', operator_id: 'OP103', check_in_date: '2025-03-05', engine_hours_day: 7.2, idle_hours_day: 0.8, equipment: { type: 'Excavator', status: 'Active' }, sites: { name: 'Highway Zone A' }, operators: { name: 'Sarah L.' } },
+  {
+    "id": "R-1001",
+    "equipment_id": "EQX1001",
+    "site_id": "S003",
+    "operator_id": "OP101",
+    "check_in_date": "2025-04-01",
+    "check_out_date": "2025-04-16",
+    "engine_hours_day": 1.5,
+    "idle_hours_day": 10,
+    "fuel_level": 91,
+    "notes": "Telemetry logged: engine 1.5h/day, idle 10h/day.",
+    "equipment": {
+      "type": "Excavator",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S003"
+    },
+    "operators": {
+      "name": "Operator OP101"
+    }
+  },
+  {
+    "id": "R-1002",
+    "equipment_id": "EQX1002",
+    "site_id": "S001",
+    "operator_id": "OP101",
+    "check_in_date": "2025-03-10",
+    "check_out_date": "2025-03-30",
+    "engine_hours_day": 0,
+    "idle_hours_day": 11,
+    "fuel_level": 80,
+    "notes": "Telemetry logged: engine 0h/day, idle 11h/day.",
+    "equipment": {
+      "type": "Crane",
+      "status": "Available"
+    },
+    "sites": {
+      "name": "Highway Construction Zone A"
+    },
+    "operators": {
+      "name": "Unassigned"
+    }
+  },
+  {
+    "id": "R-1003",
+    "equipment_id": "EQX1003",
+    "site_id": "S002",
+    "operator_id": "OP203",
+    "check_in_date": "2025-02-15",
+    "check_out_date": "2025-03-11",
+    "engine_hours_day": 7.5,
+    "idle_hours_day": 0.5,
+    "fuel_level": 73,
+    "notes": "Telemetry logged: engine 7.5h/day, idle 0.5h/day.",
+    "equipment": {
+      "type": "Bulldozer",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S002"
+    },
+    "operators": {
+      "name": "Operator OP203"
+    }
+  },
+  {
+    "id": "R-1004",
+    "equipment_id": "EQX1004",
+    "site_id": "S004",
+    "operator_id": "OP106",
+    "check_in_date": "2025-05-05",
+    "check_out_date": "2025-05-15",
+    "engine_hours_day": 2,
+    "idle_hours_day": 9,
+    "fuel_level": 63,
+    "notes": "Telemetry logged: engine 2h/day, idle 9h/day.",
+    "equipment": {
+      "type": "Excavator",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S004"
+    },
+    "operators": {
+      "name": "Operator OP106"
+    }
+  },
+  {
+    "id": "R-1005",
+    "equipment_id": "EQX1005",
+    "site_id": "S006",
+    "operator_id": "OP301",
+    "check_in_date": "2025-01-01",
+    "check_out_date": "2025-01-31",
+    "engine_hours_day": 8,
+    "idle_hours_day": 0,
+    "fuel_level": 76,
+    "notes": "Telemetry logged: engine 8h/day, idle 0h/day.",
+    "equipment": {
+      "type": "Bulldozer",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S006"
+    },
+    "operators": {
+      "name": "Operator OP301"
+    }
+  },
+  {
+    "id": "R-1006",
+    "equipment_id": "EQX1006",
+    "site_id": "S001",
+    "operator_id": "OP114",
+    "check_in_date": "2025-04-05",
+    "check_out_date": "2025-04-23",
+    "engine_hours_day": 3,
+    "idle_hours_day": 6,
+    "fuel_level": 83,
+    "notes": "Telemetry logged: engine 3h/day, idle 6h/day.",
+    "equipment": {
+      "type": "Grader",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S001"
+    },
+    "operators": {
+      "name": "Operator OP114"
+    }
+  },
+  {
+    "id": "R-1007",
+    "equipment_id": "EQX1007",
+    "site_id": "S001",
+    "operator_id": "OP101",
+    "check_in_date": "2025-03-20",
+    "check_out_date": "2025-04-01",
+    "engine_hours_day": 0,
+    "idle_hours_day": 12,
+    "fuel_level": 67,
+    "notes": "Telemetry logged: engine 0h/day, idle 12h/day.",
+    "equipment": {
+      "type": "Excavator",
+      "status": "Available"
+    },
+    "sites": {
+      "name": "Highway Construction Zone A"
+    },
+    "operators": {
+      "name": "Unassigned"
+    }
+  },
+  {
+    "id": "R-1008",
+    "equipment_id": "EQX1008",
+    "site_id": "S001",
+    "operator_id": "OP101",
+    "check_in_date": "2025-04-09",
+    "check_out_date": "2025-05-13",
+    "engine_hours_day": 0.5,
+    "idle_hours_day": 3,
+    "fuel_level": 89,
+    "notes": "Telemetry logged: engine 0.5h/day, idle 3h/day.",
+    "equipment": {
+      "type": "Excavator",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S001"
+    },
+    "operators": {
+      "name": "Operator OP101"
+    }
+  },
+  {
+    "id": "R-1009",
+    "equipment_id": "EQX1009",
+    "site_id": "S002",
+    "operator_id": "OP102",
+    "check_in_date": "2025-05-10",
+    "check_out_date": "2025-06-14",
+    "engine_hours_day": 3.5,
+    "idle_hours_day": 5,
+    "fuel_level": 74,
+    "notes": "Telemetry logged: engine 3.5h/day, idle 5h/day.",
+    "equipment": {
+      "type": "Crane",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S002"
+    },
+    "operators": {
+      "name": "Operator OP102"
+    }
+  },
+  {
+    "id": "R-1010",
+    "equipment_id": "EQX1010",
+    "site_id": "S003",
+    "operator_id": "OP103",
+    "check_in_date": "2025-01-11",
+    "check_out_date": "2025-02-15",
+    "engine_hours_day": 6.5,
+    "idle_hours_day": 7,
+    "fuel_level": 91,
+    "notes": "Telemetry logged: engine 6.5h/day, idle 7h/day.",
+    "equipment": {
+      "type": "Bulldozer",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S003"
+    },
+    "operators": {
+      "name": "Operator OP103"
+    }
+  },
+  {
+    "id": "R-1011",
+    "equipment_id": "EQX1011",
+    "site_id": "S004",
+    "operator_id": "OP106",
+    "check_in_date": "2025-02-12",
+    "check_out_date": "2025-03-16",
+    "engine_hours_day": 0.5,
+    "idle_hours_day": 9,
+    "fuel_level": 82,
+    "notes": "Telemetry logged: engine 0.5h/day, idle 9h/day.",
+    "equipment": {
+      "type": "Grader",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S004"
+    },
+    "operators": {
+      "name": "Operator OP106"
+    }
+  },
+  {
+    "id": "R-1012",
+    "equipment_id": "EQX1012",
+    "site_id": "S005",
+    "operator_id": "OP114",
+    "check_in_date": "2025-03-13",
+    "check_out_date": "2025-04-17",
+    "engine_hours_day": 3.5,
+    "idle_hours_day": 0,
+    "fuel_level": 97,
+    "notes": "Telemetry logged: engine 3.5h/day, idle 0h/day.",
+    "equipment": {
+      "type": "Loader",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S005"
+    },
+    "operators": {
+      "name": "Operator OP114"
+    }
+  },
+  {
+    "id": "R-1013",
+    "equipment_id": "EQX1013",
+    "site_id": "S006",
+    "operator_id": "OP203",
+    "check_in_date": "2025-04-14",
+    "check_out_date": "2025-05-18",
+    "engine_hours_day": 6.5,
+    "idle_hours_day": 2,
+    "fuel_level": 83,
+    "notes": "Telemetry logged: engine 6.5h/day, idle 2h/day.",
+    "equipment": {
+      "type": "Dump Truck",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S006"
+    },
+    "operators": {
+      "name": "Operator OP203"
+    }
+  },
+  {
+    "id": "R-1014",
+    "equipment_id": "EQX1014",
+    "site_id": "S007",
+    "operator_id": "OP205",
+    "check_in_date": "2025-05-15",
+    "check_out_date": "2025-06-19",
+    "engine_hours_day": 0.5,
+    "idle_hours_day": 4,
+    "fuel_level": 62,
+    "notes": "Telemetry logged: engine 0.5h/day, idle 4h/day.",
+    "equipment": {
+      "type": "Backhoe",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S007"
+    },
+    "operators": {
+      "name": "Operator OP205"
+    }
+  },
+  {
+    "id": "R-1015",
+    "equipment_id": "EQX1015",
+    "site_id": "S008",
+    "operator_id": "OP301",
+    "check_in_date": "2025-01-16",
+    "check_out_date": "2025-02-20",
+    "engine_hours_day": 3.5,
+    "idle_hours_day": 6,
+    "fuel_level": 87,
+    "notes": "Telemetry logged: engine 3.5h/day, idle 6h/day.",
+    "equipment": {
+      "type": "Forklift",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S008"
+    },
+    "operators": {
+      "name": "Operator OP301"
+    }
+  },
+  {
+    "id": "R-1016",
+    "equipment_id": "EQX1016",
+    "site_id": "S001",
+    "operator_id": "OP308",
+    "check_in_date": "2025-02-17",
+    "check_out_date": "2025-03-21",
+    "engine_hours_day": 6.5,
+    "idle_hours_day": 8,
+    "fuel_level": 80,
+    "notes": "Telemetry logged: engine 6.5h/day, idle 8h/day.",
+    "equipment": {
+      "type": "Compactor",
+      "status": "Available"
+    },
+    "sites": {
+      "name": "Highway Construction Zone A"
+    },
+    "operators": {
+      "name": "Operator OP308"
+    }
+  },
+  {
+    "id": "R-1017",
+    "equipment_id": "EQX1017",
+    "site_id": "S001",
+    "operator_id": "OP101",
+    "check_in_date": "2025-03-18",
+    "check_out_date": "2025-04-22",
+    "engine_hours_day": 0.5,
+    "idle_hours_day": 10,
+    "fuel_level": 65,
+    "notes": "Telemetry logged: engine 0.5h/day, idle 10h/day.",
+    "equipment": {
+      "type": "Skid Steer",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S001"
+    },
+    "operators": {
+      "name": "Unassigned"
+    }
+  },
+  {
+    "id": "R-1018",
+    "equipment_id": "EQX1018",
+    "site_id": "S002",
+    "operator_id": "OP101",
+    "check_in_date": "2025-04-19",
+    "check_out_date": "2025-05-23",
+    "engine_hours_day": 3.5,
+    "idle_hours_day": 1,
+    "fuel_level": 73,
+    "notes": "Telemetry logged: engine 3.5h/day, idle 1h/day.",
+    "equipment": {
+      "type": "Excavator",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S002"
+    },
+    "operators": {
+      "name": "Operator OP101"
+    }
+  },
+  {
+    "id": "R-1019",
+    "equipment_id": "EQX1019",
+    "site_id": "S003",
+    "operator_id": "OP102",
+    "check_in_date": "2025-05-20",
+    "check_out_date": "2025-06-24",
+    "engine_hours_day": 6.5,
+    "idle_hours_day": 3,
+    "fuel_level": 78,
+    "notes": "Telemetry logged: engine 6.5h/day, idle 3h/day.",
+    "equipment": {
+      "type": "Crane",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S003"
+    },
+    "operators": {
+      "name": "Operator OP102"
+    }
+  },
+  {
+    "id": "R-1020",
+    "equipment_id": "EQX1020",
+    "site_id": "S004",
+    "operator_id": "OP103",
+    "check_in_date": "2025-01-01",
+    "check_out_date": "2025-02-05",
+    "engine_hours_day": 0.5,
+    "idle_hours_day": 5,
+    "fuel_level": 95,
+    "notes": "Telemetry logged: engine 0.5h/day, idle 5h/day.",
+    "equipment": {
+      "type": "Bulldozer",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S004"
+    },
+    "operators": {
+      "name": "Operator OP103"
+    }
+  },
+  {
+    "id": "R-1021",
+    "equipment_id": "EQX1021",
+    "site_id": "S005",
+    "operator_id": "OP106",
+    "check_in_date": "2025-02-02",
+    "check_out_date": "2025-03-06",
+    "engine_hours_day": 3.5,
+    "idle_hours_day": 7,
+    "fuel_level": 62,
+    "notes": "Telemetry logged: engine 3.5h/day, idle 7h/day.",
+    "equipment": {
+      "type": "Grader",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S005"
+    },
+    "operators": {
+      "name": "Operator OP106"
+    }
+  },
+  {
+    "id": "R-1022",
+    "equipment_id": "EQX1022",
+    "site_id": "S006",
+    "operator_id": "OP114",
+    "check_in_date": "2025-03-03",
+    "check_out_date": "2025-04-07",
+    "engine_hours_day": 6.5,
+    "idle_hours_day": 9,
+    "fuel_level": 67,
+    "notes": "Telemetry logged: engine 6.5h/day, idle 9h/day.",
+    "equipment": {
+      "type": "Loader",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S006"
+    },
+    "operators": {
+      "name": "Operator OP114"
+    }
+  },
+  {
+    "id": "R-1023",
+    "equipment_id": "EQX1023",
+    "site_id": "S007",
+    "operator_id": "OP203",
+    "check_in_date": "2025-04-04",
+    "check_out_date": "2025-05-08",
+    "engine_hours_day": 0.5,
+    "idle_hours_day": 0,
+    "fuel_level": 96,
+    "notes": "Telemetry logged: engine 0.5h/day, idle 0h/day.",
+    "equipment": {
+      "type": "Dump Truck",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S007"
+    },
+    "operators": {
+      "name": "Operator OP203"
+    }
+  },
+  {
+    "id": "R-1024",
+    "equipment_id": "EQX1024",
+    "site_id": "S008",
+    "operator_id": "OP205",
+    "check_in_date": "2025-05-05",
+    "check_out_date": "2025-06-09",
+    "engine_hours_day": 3.5,
+    "idle_hours_day": 2,
+    "fuel_level": 81,
+    "notes": "Telemetry logged: engine 3.5h/day, idle 2h/day.",
+    "equipment": {
+      "type": "Backhoe",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S008"
+    },
+    "operators": {
+      "name": "Operator OP205"
+    }
+  },
+  {
+    "id": "R-1025",
+    "equipment_id": "EQX1025",
+    "site_id": "S001",
+    "operator_id": "OP301",
+    "check_in_date": "2025-01-06",
+    "check_out_date": "2025-02-10",
+    "engine_hours_day": 6.5,
+    "idle_hours_day": 4,
+    "fuel_level": 88,
+    "notes": "Telemetry logged: engine 6.5h/day, idle 4h/day.",
+    "equipment": {
+      "type": "Forklift",
+      "status": "Available"
+    },
+    "sites": {
+      "name": "Highway Construction Zone A"
+    },
+    "operators": {
+      "name": "Operator OP301"
+    }
+  },
+  {
+    "id": "R-1026",
+    "equipment_id": "EQX1026",
+    "site_id": "S001",
+    "operator_id": "OP308",
+    "check_in_date": "2025-02-07",
+    "check_out_date": "2025-03-11",
+    "engine_hours_day": 0.5,
+    "idle_hours_day": 6,
+    "fuel_level": 83,
+    "notes": "Telemetry logged: engine 0.5h/day, idle 6h/day.",
+    "equipment": {
+      "type": "Compactor",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S001"
+    },
+    "operators": {
+      "name": "Operator OP308"
+    }
+  },
+  {
+    "id": "R-1027",
+    "equipment_id": "EQX1027",
+    "site_id": "S002",
+    "operator_id": "OP101",
+    "check_in_date": "2025-03-08",
+    "check_out_date": "2025-04-12",
+    "engine_hours_day": 3.5,
+    "idle_hours_day": 8,
+    "fuel_level": 88,
+    "notes": "Telemetry logged: engine 3.5h/day, idle 8h/day.",
+    "equipment": {
+      "type": "Skid Steer",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S002"
+    },
+    "operators": {
+      "name": "Unassigned"
+    }
+  },
+  {
+    "id": "R-1028",
+    "equipment_id": "EQX1028",
+    "site_id": "S003",
+    "operator_id": "OP101",
+    "check_in_date": "2025-04-09",
+    "check_out_date": "2025-05-13",
+    "engine_hours_day": 6.5,
+    "idle_hours_day": 10,
+    "fuel_level": 78,
+    "notes": "Telemetry logged: engine 6.5h/day, idle 10h/day.",
+    "equipment": {
+      "type": "Excavator",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S003"
+    },
+    "operators": {
+      "name": "Operator OP101"
+    }
+  },
+  {
+    "id": "R-1029",
+    "equipment_id": "EQX1029",
+    "site_id": "S004",
+    "operator_id": "OP102",
+    "check_in_date": "2025-05-10",
+    "check_out_date": "2025-06-14",
+    "engine_hours_day": 0.5,
+    "idle_hours_day": 1,
+    "fuel_level": 64,
+    "notes": "Telemetry logged: engine 0.5h/day, idle 1h/day.",
+    "equipment": {
+      "type": "Crane",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S004"
+    },
+    "operators": {
+      "name": "Operator OP102"
+    }
+  },
+  {
+    "id": "R-1030",
+    "equipment_id": "EQX1030",
+    "site_id": "S005",
+    "operator_id": "OP103",
+    "check_in_date": "2025-01-11",
+    "check_out_date": "2025-02-15",
+    "engine_hours_day": 3.5,
+    "idle_hours_day": 3,
+    "fuel_level": 95,
+    "notes": "Telemetry logged: engine 3.5h/day, idle 3h/day.",
+    "equipment": {
+      "type": "Bulldozer",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S005"
+    },
+    "operators": {
+      "name": "Operator OP103"
+    }
+  },
+  {
+    "id": "R-1031",
+    "equipment_id": "EQX1031",
+    "site_id": "S006",
+    "operator_id": "OP106",
+    "check_in_date": "2025-02-12",
+    "check_out_date": "2025-03-16",
+    "engine_hours_day": 6.5,
+    "idle_hours_day": 5,
+    "fuel_level": 83,
+    "notes": "Telemetry logged: engine 6.5h/day, idle 5h/day.",
+    "equipment": {
+      "type": "Grader",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S006"
+    },
+    "operators": {
+      "name": "Operator OP106"
+    }
+  },
+  {
+    "id": "R-1032",
+    "equipment_id": "EQX1032",
+    "site_id": "S007",
+    "operator_id": "OP114",
+    "check_in_date": "2025-03-13",
+    "check_out_date": "2025-04-17",
+    "engine_hours_day": 0.5,
+    "idle_hours_day": 7,
+    "fuel_level": 72,
+    "notes": "Telemetry logged: engine 0.5h/day, idle 7h/day.",
+    "equipment": {
+      "type": "Loader",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S007"
+    },
+    "operators": {
+      "name": "Operator OP114"
+    }
+  },
+  {
+    "id": "R-1033",
+    "equipment_id": "EQX1033",
+    "site_id": "S008",
+    "operator_id": "OP203",
+    "check_in_date": "2025-04-14",
+    "check_out_date": "2025-05-18",
+    "engine_hours_day": 3.5,
+    "idle_hours_day": 9,
+    "fuel_level": 72,
+    "notes": "Telemetry logged: engine 3.5h/day, idle 9h/day.",
+    "equipment": {
+      "type": "Dump Truck",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S008"
+    },
+    "operators": {
+      "name": "Operator OP203"
+    }
+  },
+  {
+    "id": "R-1034",
+    "equipment_id": "EQX1034",
+    "site_id": "S001",
+    "operator_id": "OP205",
+    "check_in_date": "2025-05-15",
+    "check_out_date": "2025-06-19",
+    "engine_hours_day": 6.5,
+    "idle_hours_day": 0,
+    "fuel_level": 84,
+    "notes": "Telemetry logged: engine 6.5h/day, idle 0h/day.",
+    "equipment": {
+      "type": "Backhoe",
+      "status": "Available"
+    },
+    "sites": {
+      "name": "Highway Construction Zone A"
+    },
+    "operators": {
+      "name": "Operator OP205"
+    }
+  },
+  {
+    "id": "R-1035",
+    "equipment_id": "EQX1035",
+    "site_id": "S001",
+    "operator_id": "OP301",
+    "check_in_date": "2025-01-16",
+    "check_out_date": "2025-02-20",
+    "engine_hours_day": 0.5,
+    "idle_hours_day": 2,
+    "fuel_level": 60,
+    "notes": "Telemetry logged: engine 0.5h/day, idle 2h/day.",
+    "equipment": {
+      "type": "Forklift",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S001"
+    },
+    "operators": {
+      "name": "Operator OP301"
+    }
+  },
+  {
+    "id": "R-1036",
+    "equipment_id": "EQX1036",
+    "site_id": "S002",
+    "operator_id": "OP308",
+    "check_in_date": "2025-02-17",
+    "check_out_date": "2025-03-21",
+    "engine_hours_day": 3.5,
+    "idle_hours_day": 4,
+    "fuel_level": 66,
+    "notes": "Telemetry logged: engine 3.5h/day, idle 4h/day.",
+    "equipment": {
+      "type": "Compactor",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S002"
+    },
+    "operators": {
+      "name": "Operator OP308"
+    }
+  },
+  {
+    "id": "R-1037",
+    "equipment_id": "EQX1037",
+    "site_id": "S003",
+    "operator_id": "OP101",
+    "check_in_date": "2025-03-18",
+    "check_out_date": "2025-04-22",
+    "engine_hours_day": 6.5,
+    "idle_hours_day": 6,
+    "fuel_level": 88,
+    "notes": "Telemetry logged: engine 6.5h/day, idle 6h/day.",
+    "equipment": {
+      "type": "Skid Steer",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S003"
+    },
+    "operators": {
+      "name": "Unassigned"
+    }
+  },
+  {
+    "id": "R-1038",
+    "equipment_id": "EQX1038",
+    "site_id": "S004",
+    "operator_id": "OP101",
+    "check_in_date": "2025-04-19",
+    "check_out_date": "2025-05-23",
+    "engine_hours_day": 0.5,
+    "idle_hours_day": 8,
+    "fuel_level": 64,
+    "notes": "Telemetry logged: engine 0.5h/day, idle 8h/day.",
+    "equipment": {
+      "type": "Excavator",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S004"
+    },
+    "operators": {
+      "name": "Operator OP101"
+    }
+  },
+  {
+    "id": "R-1039",
+    "equipment_id": "EQX1039",
+    "site_id": "S005",
+    "operator_id": "OP102",
+    "check_in_date": "2025-05-20",
+    "check_out_date": "2025-06-24",
+    "engine_hours_day": 3.5,
+    "idle_hours_day": 10,
+    "fuel_level": 95,
+    "notes": "Telemetry logged: engine 3.5h/day, idle 10h/day.",
+    "equipment": {
+      "type": "Crane",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S005"
+    },
+    "operators": {
+      "name": "Operator OP102"
+    }
+  },
+  {
+    "id": "R-1040",
+    "equipment_id": "EQX1040",
+    "site_id": "S006",
+    "operator_id": "OP103",
+    "check_in_date": "2025-01-01",
+    "check_out_date": "2025-02-05",
+    "engine_hours_day": 6.5,
+    "idle_hours_day": 1,
+    "fuel_level": 89,
+    "notes": "Telemetry logged: engine 6.5h/day, idle 1h/day.",
+    "equipment": {
+      "type": "Bulldozer",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S006"
+    },
+    "operators": {
+      "name": "Operator OP103"
+    }
+  },
+  {
+    "id": "R-1041",
+    "equipment_id": "EQX1041",
+    "site_id": "S007",
+    "operator_id": "OP106",
+    "check_in_date": "2025-02-02",
+    "check_out_date": "2025-03-06",
+    "engine_hours_day": 0.5,
+    "idle_hours_day": 3,
+    "fuel_level": 69,
+    "notes": "Telemetry logged: engine 0.5h/day, idle 3h/day.",
+    "equipment": {
+      "type": "Grader",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S007"
+    },
+    "operators": {
+      "name": "Operator OP106"
+    }
+  },
+  {
+    "id": "R-1042",
+    "equipment_id": "EQX1042",
+    "site_id": "S008",
+    "operator_id": "OP114",
+    "check_in_date": "2025-03-03",
+    "check_out_date": "2025-04-07",
+    "engine_hours_day": 3.5,
+    "idle_hours_day": 5,
+    "fuel_level": 78,
+    "notes": "Telemetry logged: engine 3.5h/day, idle 5h/day.",
+    "equipment": {
+      "type": "Loader",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S008"
+    },
+    "operators": {
+      "name": "Operator OP114"
+    }
+  },
+  {
+    "id": "R-1043",
+    "equipment_id": "EQX1043",
+    "site_id": "S001",
+    "operator_id": "OP203",
+    "check_in_date": "2025-04-04",
+    "check_out_date": "2025-05-08",
+    "engine_hours_day": 6.5,
+    "idle_hours_day": 7,
+    "fuel_level": 70,
+    "notes": "Telemetry logged: engine 6.5h/day, idle 7h/day.",
+    "equipment": {
+      "type": "Dump Truck",
+      "status": "Available"
+    },
+    "sites": {
+      "name": "Highway Construction Zone A"
+    },
+    "operators": {
+      "name": "Operator OP203"
+    }
+  },
+  {
+    "id": "R-1044",
+    "equipment_id": "EQX1044",
+    "site_id": "S001",
+    "operator_id": "OP205",
+    "check_in_date": "2025-05-05",
+    "check_out_date": "2025-06-09",
+    "engine_hours_day": 0.5,
+    "idle_hours_day": 9,
+    "fuel_level": 76,
+    "notes": "Telemetry logged: engine 0.5h/day, idle 9h/day.",
+    "equipment": {
+      "type": "Backhoe",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S001"
+    },
+    "operators": {
+      "name": "Operator OP205"
+    }
+  },
+  {
+    "id": "R-1045",
+    "equipment_id": "EQX1045",
+    "site_id": "S002",
+    "operator_id": "OP301",
+    "check_in_date": "2025-01-06",
+    "check_out_date": "2025-02-10",
+    "engine_hours_day": 3.5,
+    "idle_hours_day": 0,
+    "fuel_level": 95,
+    "notes": "Telemetry logged: engine 3.5h/day, idle 0h/day.",
+    "equipment": {
+      "type": "Forklift",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S002"
+    },
+    "operators": {
+      "name": "Operator OP301"
+    }
+  },
+  {
+    "id": "R-1046",
+    "equipment_id": "EQX1046",
+    "site_id": "S003",
+    "operator_id": "OP308",
+    "check_in_date": "2025-02-07",
+    "check_out_date": "2025-03-11",
+    "engine_hours_day": 6.5,
+    "idle_hours_day": 2,
+    "fuel_level": 78,
+    "notes": "Telemetry logged: engine 6.5h/day, idle 2h/day.",
+    "equipment": {
+      "type": "Compactor",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S003"
+    },
+    "operators": {
+      "name": "Operator OP308"
+    }
+  },
+  {
+    "id": "R-1047",
+    "equipment_id": "EQX1047",
+    "site_id": "S004",
+    "operator_id": "OP101",
+    "check_in_date": "2025-03-08",
+    "check_out_date": "2025-04-12",
+    "engine_hours_day": 0.5,
+    "idle_hours_day": 4,
+    "fuel_level": 85,
+    "notes": "Telemetry logged: engine 0.5h/day, idle 4h/day.",
+    "equipment": {
+      "type": "Skid Steer",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S004"
+    },
+    "operators": {
+      "name": "Unassigned"
+    }
+  },
+  {
+    "id": "R-1048",
+    "equipment_id": "EQX1048",
+    "site_id": "S005",
+    "operator_id": "OP101",
+    "check_in_date": "2025-04-09",
+    "check_out_date": "2025-05-13",
+    "engine_hours_day": 3.5,
+    "idle_hours_day": 6,
+    "fuel_level": 65,
+    "notes": "Telemetry logged: engine 3.5h/day, idle 6h/day.",
+    "equipment": {
+      "type": "Excavator",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S005"
+    },
+    "operators": {
+      "name": "Operator OP101"
+    }
+  },
+  {
+    "id": "R-1049",
+    "equipment_id": "EQX1049",
+    "site_id": "S006",
+    "operator_id": "OP102",
+    "check_in_date": "2025-05-10",
+    "check_out_date": "2025-06-14",
+    "engine_hours_day": 6.5,
+    "idle_hours_day": 8,
+    "fuel_level": 70,
+    "notes": "Telemetry logged: engine 6.5h/day, idle 8h/day.",
+    "equipment": {
+      "type": "Crane",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S006"
+    },
+    "operators": {
+      "name": "Operator OP102"
+    }
+  },
+  {
+    "id": "R-1050",
+    "equipment_id": "EQX1050",
+    "site_id": "S007",
+    "operator_id": "OP103",
+    "check_in_date": "2025-01-11",
+    "check_out_date": "2025-02-15",
+    "engine_hours_day": 0.5,
+    "idle_hours_day": 10,
+    "fuel_level": 91,
+    "notes": "Telemetry logged: engine 0.5h/day, idle 10h/day.",
+    "equipment": {
+      "type": "Bulldozer",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S007"
+    },
+    "operators": {
+      "name": "Operator OP103"
+    }
+  },
+  {
+    "id": "R-1051",
+    "equipment_id": "EQX1051",
+    "site_id": "S008",
+    "operator_id": "OP106",
+    "check_in_date": "2025-02-12",
+    "check_out_date": "2025-03-16",
+    "engine_hours_day": 3.5,
+    "idle_hours_day": 1,
+    "fuel_level": 65,
+    "notes": "Telemetry logged: engine 3.5h/day, idle 1h/day.",
+    "equipment": {
+      "type": "Grader",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S008"
+    },
+    "operators": {
+      "name": "Operator OP106"
+    }
+  },
+  {
+    "id": "R-1052",
+    "equipment_id": "EQX1052",
+    "site_id": "S001",
+    "operator_id": "OP114",
+    "check_in_date": "2025-03-13",
+    "check_out_date": "2025-04-17",
+    "engine_hours_day": 6.5,
+    "idle_hours_day": 3,
+    "fuel_level": 60,
+    "notes": "Telemetry logged: engine 6.5h/day, idle 3h/day.",
+    "equipment": {
+      "type": "Loader",
+      "status": "Available"
+    },
+    "sites": {
+      "name": "Highway Construction Zone A"
+    },
+    "operators": {
+      "name": "Operator OP114"
+    }
+  },
+  {
+    "id": "R-1053",
+    "equipment_id": "EQX1053",
+    "site_id": "S001",
+    "operator_id": "OP203",
+    "check_in_date": "2025-04-14",
+    "check_out_date": "2025-05-18",
+    "engine_hours_day": 0.5,
+    "idle_hours_day": 5,
+    "fuel_level": 83,
+    "notes": "Telemetry logged: engine 0.5h/day, idle 5h/day.",
+    "equipment": {
+      "type": "Dump Truck",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S001"
+    },
+    "operators": {
+      "name": "Operator OP203"
+    }
+  },
+  {
+    "id": "R-1054",
+    "equipment_id": "EQX1054",
+    "site_id": "S002",
+    "operator_id": "OP205",
+    "check_in_date": "2025-05-15",
+    "check_out_date": "2025-06-19",
+    "engine_hours_day": 3.5,
+    "idle_hours_day": 7,
+    "fuel_level": 91,
+    "notes": "Telemetry logged: engine 3.5h/day, idle 7h/day.",
+    "equipment": {
+      "type": "Backhoe",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S002"
+    },
+    "operators": {
+      "name": "Operator OP205"
+    }
+  },
+  {
+    "id": "R-1055",
+    "equipment_id": "EQX1055",
+    "site_id": "S003",
+    "operator_id": "OP301",
+    "check_in_date": "2025-01-16",
+    "check_out_date": "2025-02-20",
+    "engine_hours_day": 6.5,
+    "idle_hours_day": 9,
+    "fuel_level": 83,
+    "notes": "Telemetry logged: engine 6.5h/day, idle 9h/day.",
+    "equipment": {
+      "type": "Forklift",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S003"
+    },
+    "operators": {
+      "name": "Operator OP301"
+    }
+  },
+  {
+    "id": "R-1056",
+    "equipment_id": "EQX1056",
+    "site_id": "S004",
+    "operator_id": "OP308",
+    "check_in_date": "2025-02-17",
+    "check_out_date": "2025-03-21",
+    "engine_hours_day": 0.5,
+    "idle_hours_day": 0,
+    "fuel_level": 63,
+    "notes": "Telemetry logged: engine 0.5h/day, idle 0h/day.",
+    "equipment": {
+      "type": "Compactor",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S004"
+    },
+    "operators": {
+      "name": "Operator OP308"
+    }
+  },
+  {
+    "id": "R-1057",
+    "equipment_id": "EQX1057",
+    "site_id": "S005",
+    "operator_id": "OP101",
+    "check_in_date": "2025-03-18",
+    "check_out_date": "2025-04-22",
+    "engine_hours_day": 3.5,
+    "idle_hours_day": 2,
+    "fuel_level": 62,
+    "notes": "Telemetry logged: engine 3.5h/day, idle 2h/day.",
+    "equipment": {
+      "type": "Skid Steer",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S005"
+    },
+    "operators": {
+      "name": "Unassigned"
+    }
+  },
+  {
+    "id": "R-1058",
+    "equipment_id": "EQX1058",
+    "site_id": "S006",
+    "operator_id": "OP101",
+    "check_in_date": "2025-04-19",
+    "check_out_date": "2025-05-23",
+    "engine_hours_day": 6.5,
+    "idle_hours_day": 4,
+    "fuel_level": 60,
+    "notes": "Telemetry logged: engine 6.5h/day, idle 4h/day.",
+    "equipment": {
+      "type": "Excavator",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S006"
+    },
+    "operators": {
+      "name": "Operator OP101"
+    }
+  },
+  {
+    "id": "R-1059",
+    "equipment_id": "EQX1059",
+    "site_id": "S007",
+    "operator_id": "OP102",
+    "check_in_date": "2025-05-20",
+    "check_out_date": "2025-06-24",
+    "engine_hours_day": 0.5,
+    "idle_hours_day": 6,
+    "fuel_level": 98,
+    "notes": "Telemetry logged: engine 0.5h/day, idle 6h/day.",
+    "equipment": {
+      "type": "Crane",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S007"
+    },
+    "operators": {
+      "name": "Operator OP102"
+    }
+  },
+  {
+    "id": "R-1060",
+    "equipment_id": "EQX1060",
+    "site_id": "S008",
+    "operator_id": "OP103",
+    "check_in_date": "2025-01-01",
+    "check_out_date": "2025-02-05",
+    "engine_hours_day": 3.5,
+    "idle_hours_day": 8,
+    "fuel_level": 64,
+    "notes": "Telemetry logged: engine 3.5h/day, idle 8h/day.",
+    "equipment": {
+      "type": "Bulldozer",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S008"
+    },
+    "operators": {
+      "name": "Operator OP103"
+    }
+  },
+  {
+    "id": "R-1061",
+    "equipment_id": "EQX1061",
+    "site_id": "S001",
+    "operator_id": "OP106",
+    "check_in_date": "2025-02-02",
+    "check_out_date": "2025-03-06",
+    "engine_hours_day": 6.5,
+    "idle_hours_day": 10,
+    "fuel_level": 76,
+    "notes": "Telemetry logged: engine 6.5h/day, idle 10h/day.",
+    "equipment": {
+      "type": "Grader",
+      "status": "Available"
+    },
+    "sites": {
+      "name": "Highway Construction Zone A"
+    },
+    "operators": {
+      "name": "Operator OP106"
+    }
+  },
+  {
+    "id": "R-1062",
+    "equipment_id": "EQX1062",
+    "site_id": "S001",
+    "operator_id": "OP114",
+    "check_in_date": "2025-03-03",
+    "check_out_date": "2025-04-07",
+    "engine_hours_day": 0.5,
+    "idle_hours_day": 1,
+    "fuel_level": 81,
+    "notes": "Telemetry logged: engine 0.5h/day, idle 1h/day.",
+    "equipment": {
+      "type": "Loader",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S001"
+    },
+    "operators": {
+      "name": "Operator OP114"
+    }
+  },
+  {
+    "id": "R-1063",
+    "equipment_id": "EQX1063",
+    "site_id": "S002",
+    "operator_id": "OP203",
+    "check_in_date": "2025-04-04",
+    "check_out_date": "2025-05-08",
+    "engine_hours_day": 3.5,
+    "idle_hours_day": 3,
+    "fuel_level": 67,
+    "notes": "Telemetry logged: engine 3.5h/day, idle 3h/day.",
+    "equipment": {
+      "type": "Dump Truck",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S002"
+    },
+    "operators": {
+      "name": "Operator OP203"
+    }
+  },
+  {
+    "id": "R-1064",
+    "equipment_id": "EQX1064",
+    "site_id": "S003",
+    "operator_id": "OP205",
+    "check_in_date": "2025-05-05",
+    "check_out_date": "2025-06-09",
+    "engine_hours_day": 6.5,
+    "idle_hours_day": 5,
+    "fuel_level": 72,
+    "notes": "Telemetry logged: engine 6.5h/day, idle 5h/day.",
+    "equipment": {
+      "type": "Backhoe",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S003"
+    },
+    "operators": {
+      "name": "Operator OP205"
+    }
+  },
+  {
+    "id": "R-1065",
+    "equipment_id": "EQX1065",
+    "site_id": "S004",
+    "operator_id": "OP301",
+    "check_in_date": "2025-01-06",
+    "check_out_date": "2025-02-10",
+    "engine_hours_day": 0.5,
+    "idle_hours_day": 7,
+    "fuel_level": 87,
+    "notes": "Telemetry logged: engine 0.5h/day, idle 7h/day.",
+    "equipment": {
+      "type": "Forklift",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S004"
+    },
+    "operators": {
+      "name": "Operator OP301"
+    }
+  },
+  {
+    "id": "R-1066",
+    "equipment_id": "EQX1066",
+    "site_id": "S005",
+    "operator_id": "OP308",
+    "check_in_date": "2025-02-07",
+    "check_out_date": "2025-03-11",
+    "engine_hours_day": 3.5,
+    "idle_hours_day": 9,
+    "fuel_level": 75,
+    "notes": "Telemetry logged: engine 3.5h/day, idle 9h/day.",
+    "equipment": {
+      "type": "Compactor",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S005"
+    },
+    "operators": {
+      "name": "Operator OP308"
+    }
+  },
+  {
+    "id": "R-1067",
+    "equipment_id": "EQX1067",
+    "site_id": "S006",
+    "operator_id": "OP101",
+    "check_in_date": "2025-03-08",
+    "check_out_date": "2025-04-12",
+    "engine_hours_day": 6.5,
+    "idle_hours_day": 0,
+    "fuel_level": 71,
+    "notes": "Telemetry logged: engine 6.5h/day, idle 0h/day.",
+    "equipment": {
+      "type": "Skid Steer",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S006"
+    },
+    "operators": {
+      "name": "Unassigned"
+    }
+  },
+  {
+    "id": "R-1068",
+    "equipment_id": "EQX1068",
+    "site_id": "S007",
+    "operator_id": "OP101",
+    "check_in_date": "2025-04-09",
+    "check_out_date": "2025-05-13",
+    "engine_hours_day": 0.5,
+    "idle_hours_day": 2,
+    "fuel_level": 84,
+    "notes": "Telemetry logged: engine 0.5h/day, idle 2h/day.",
+    "equipment": {
+      "type": "Excavator",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S007"
+    },
+    "operators": {
+      "name": "Operator OP101"
+    }
+  },
+  {
+    "id": "R-1069",
+    "equipment_id": "EQX1069",
+    "site_id": "S008",
+    "operator_id": "OP102",
+    "check_in_date": "2025-05-10",
+    "check_out_date": "2025-06-14",
+    "engine_hours_day": 3.5,
+    "idle_hours_day": 4,
+    "fuel_level": 65,
+    "notes": "Telemetry logged: engine 3.5h/day, idle 4h/day.",
+    "equipment": {
+      "type": "Crane",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S008"
+    },
+    "operators": {
+      "name": "Operator OP102"
+    }
+  },
+  {
+    "id": "R-1070",
+    "equipment_id": "EQX1070",
+    "site_id": "S001",
+    "operator_id": "OP103",
+    "check_in_date": "2025-01-11",
+    "check_out_date": "2025-02-15",
+    "engine_hours_day": 6.5,
+    "idle_hours_day": 6,
+    "fuel_level": 85,
+    "notes": "Telemetry logged: engine 6.5h/day, idle 6h/day.",
+    "equipment": {
+      "type": "Bulldozer",
+      "status": "Available"
+    },
+    "sites": {
+      "name": "Highway Construction Zone A"
+    },
+    "operators": {
+      "name": "Operator OP103"
+    }
+  },
+  {
+    "id": "R-1071",
+    "equipment_id": "EQX1071",
+    "site_id": "S001",
+    "operator_id": "OP106",
+    "check_in_date": "2025-02-12",
+    "check_out_date": "2025-03-16",
+    "engine_hours_day": 0.5,
+    "idle_hours_day": 8,
+    "fuel_level": 74,
+    "notes": "Telemetry logged: engine 0.5h/day, idle 8h/day.",
+    "equipment": {
+      "type": "Grader",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S001"
+    },
+    "operators": {
+      "name": "Operator OP106"
+    }
+  },
+  {
+    "id": "R-1072",
+    "equipment_id": "EQX1072",
+    "site_id": "S002",
+    "operator_id": "OP114",
+    "check_in_date": "2025-03-13",
+    "check_out_date": "2025-04-17",
+    "engine_hours_day": 3.5,
+    "idle_hours_day": 10,
+    "fuel_level": 62,
+    "notes": "Telemetry logged: engine 3.5h/day, idle 10h/day.",
+    "equipment": {
+      "type": "Loader",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S002"
+    },
+    "operators": {
+      "name": "Operator OP114"
+    }
+  },
+  {
+    "id": "R-1073",
+    "equipment_id": "EQX1073",
+    "site_id": "S003",
+    "operator_id": "OP203",
+    "check_in_date": "2025-04-14",
+    "check_out_date": "2025-05-18",
+    "engine_hours_day": 6.5,
+    "idle_hours_day": 1,
+    "fuel_level": 87,
+    "notes": "Telemetry logged: engine 6.5h/day, idle 1h/day.",
+    "equipment": {
+      "type": "Dump Truck",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S003"
+    },
+    "operators": {
+      "name": "Operator OP203"
+    }
+  },
+  {
+    "id": "R-1074",
+    "equipment_id": "EQX1074",
+    "site_id": "S004",
+    "operator_id": "OP205",
+    "check_in_date": "2025-05-15",
+    "check_out_date": "2025-06-19",
+    "engine_hours_day": 0.5,
+    "idle_hours_day": 3,
+    "fuel_level": 87,
+    "notes": "Telemetry logged: engine 0.5h/day, idle 3h/day.",
+    "equipment": {
+      "type": "Backhoe",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S004"
+    },
+    "operators": {
+      "name": "Operator OP205"
+    }
+  },
+  {
+    "id": "R-1075",
+    "equipment_id": "EQX1075",
+    "site_id": "S005",
+    "operator_id": "OP301",
+    "check_in_date": "2025-01-16",
+    "check_out_date": "2025-02-20",
+    "engine_hours_day": 3.5,
+    "idle_hours_day": 5,
+    "fuel_level": 75,
+    "notes": "Telemetry logged: engine 3.5h/day, idle 5h/day.",
+    "equipment": {
+      "type": "Forklift",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S005"
+    },
+    "operators": {
+      "name": "Operator OP301"
+    }
+  },
+  {
+    "id": "R-1076",
+    "equipment_id": "EQX1076",
+    "site_id": "S006",
+    "operator_id": "OP308",
+    "check_in_date": "2025-02-17",
+    "check_out_date": "2025-03-21",
+    "engine_hours_day": 6.5,
+    "idle_hours_day": 7,
+    "fuel_level": 85,
+    "notes": "Telemetry logged: engine 6.5h/day, idle 7h/day.",
+    "equipment": {
+      "type": "Compactor",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S006"
+    },
+    "operators": {
+      "name": "Operator OP308"
+    }
+  },
+  {
+    "id": "R-1077",
+    "equipment_id": "EQX1077",
+    "site_id": "S007",
+    "operator_id": "OP101",
+    "check_in_date": "2025-03-18",
+    "check_out_date": "2025-04-22",
+    "engine_hours_day": 0.5,
+    "idle_hours_day": 9,
+    "fuel_level": 70,
+    "notes": "Telemetry logged: engine 0.5h/day, idle 9h/day.",
+    "equipment": {
+      "type": "Skid Steer",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S007"
+    },
+    "operators": {
+      "name": "Unassigned"
+    }
+  },
+  {
+    "id": "R-1078",
+    "equipment_id": "EQX1078",
+    "site_id": "S008",
+    "operator_id": "OP101",
+    "check_in_date": "2025-04-19",
+    "check_out_date": "2025-05-23",
+    "engine_hours_day": 3.5,
+    "idle_hours_day": 0,
+    "fuel_level": 96,
+    "notes": "Telemetry logged: engine 3.5h/day, idle 0h/day.",
+    "equipment": {
+      "type": "Excavator",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S008"
+    },
+    "operators": {
+      "name": "Operator OP101"
+    }
+  },
+  {
+    "id": "R-1079",
+    "equipment_id": "EQX1079",
+    "site_id": "S001",
+    "operator_id": "OP102",
+    "check_in_date": "2025-05-20",
+    "check_out_date": "2025-06-24",
+    "engine_hours_day": 6.5,
+    "idle_hours_day": 2,
+    "fuel_level": 92,
+    "notes": "Telemetry logged: engine 6.5h/day, idle 2h/day.",
+    "equipment": {
+      "type": "Crane",
+      "status": "Available"
+    },
+    "sites": {
+      "name": "Highway Construction Zone A"
+    },
+    "operators": {
+      "name": "Operator OP102"
+    }
+  },
+  {
+    "id": "R-1080",
+    "equipment_id": "EQX1080",
+    "site_id": "S001",
+    "operator_id": "OP103",
+    "check_in_date": "2025-01-01",
+    "check_out_date": "2025-02-05",
+    "engine_hours_day": 0.5,
+    "idle_hours_day": 4,
+    "fuel_level": 69,
+    "notes": "Telemetry logged: engine 0.5h/day, idle 4h/day.",
+    "equipment": {
+      "type": "Bulldozer",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S001"
+    },
+    "operators": {
+      "name": "Operator OP103"
+    }
+  },
+  {
+    "id": "R-1081",
+    "equipment_id": "EQX1081",
+    "site_id": "S002",
+    "operator_id": "OP106",
+    "check_in_date": "2025-02-02",
+    "check_out_date": "2025-03-06",
+    "engine_hours_day": 3.5,
+    "idle_hours_day": 6,
+    "fuel_level": 64,
+    "notes": "Telemetry logged: engine 3.5h/day, idle 6h/day.",
+    "equipment": {
+      "type": "Grader",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S002"
+    },
+    "operators": {
+      "name": "Operator OP106"
+    }
+  },
+  {
+    "id": "R-1082",
+    "equipment_id": "EQX1082",
+    "site_id": "S003",
+    "operator_id": "OP114",
+    "check_in_date": "2025-03-03",
+    "check_out_date": "2025-04-07",
+    "engine_hours_day": 6.5,
+    "idle_hours_day": 8,
+    "fuel_level": 85,
+    "notes": "Telemetry logged: engine 6.5h/day, idle 8h/day.",
+    "equipment": {
+      "type": "Loader",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S003"
+    },
+    "operators": {
+      "name": "Operator OP114"
+    }
+  },
+  {
+    "id": "R-1083",
+    "equipment_id": "EQX1083",
+    "site_id": "S004",
+    "operator_id": "OP203",
+    "check_in_date": "2025-04-04",
+    "check_out_date": "2025-05-08",
+    "engine_hours_day": 0.5,
+    "idle_hours_day": 10,
+    "fuel_level": 98,
+    "notes": "Telemetry logged: engine 0.5h/day, idle 10h/day.",
+    "equipment": {
+      "type": "Dump Truck",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S004"
+    },
+    "operators": {
+      "name": "Operator OP203"
+    }
+  },
+  {
+    "id": "R-1084",
+    "equipment_id": "EQX1084",
+    "site_id": "S005",
+    "operator_id": "OP205",
+    "check_in_date": "2025-05-05",
+    "check_out_date": "2025-06-09",
+    "engine_hours_day": 3.5,
+    "idle_hours_day": 1,
+    "fuel_level": 83,
+    "notes": "Telemetry logged: engine 3.5h/day, idle 1h/day.",
+    "equipment": {
+      "type": "Backhoe",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S005"
+    },
+    "operators": {
+      "name": "Operator OP205"
+    }
+  },
+  {
+    "id": "R-1085",
+    "equipment_id": "EQX1085",
+    "site_id": "S006",
+    "operator_id": "OP301",
+    "check_in_date": "2025-01-06",
+    "check_out_date": "2025-02-10",
+    "engine_hours_day": 6.5,
+    "idle_hours_day": 3,
+    "fuel_level": 92,
+    "notes": "Telemetry logged: engine 6.5h/day, idle 3h/day.",
+    "equipment": {
+      "type": "Forklift",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S006"
+    },
+    "operators": {
+      "name": "Operator OP301"
+    }
+  },
+  {
+    "id": "R-1086",
+    "equipment_id": "EQX1086",
+    "site_id": "S007",
+    "operator_id": "OP308",
+    "check_in_date": "2025-02-07",
+    "check_out_date": "2025-03-11",
+    "engine_hours_day": 0.5,
+    "idle_hours_day": 5,
+    "fuel_level": 95,
+    "notes": "Telemetry logged: engine 0.5h/day, idle 5h/day.",
+    "equipment": {
+      "type": "Compactor",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S007"
+    },
+    "operators": {
+      "name": "Operator OP308"
+    }
+  },
+  {
+    "id": "R-1087",
+    "equipment_id": "EQX1087",
+    "site_id": "S008",
+    "operator_id": "OP101",
+    "check_in_date": "2025-03-08",
+    "check_out_date": "2025-04-12",
+    "engine_hours_day": 3.5,
+    "idle_hours_day": 7,
+    "fuel_level": 81,
+    "notes": "Telemetry logged: engine 3.5h/day, idle 7h/day.",
+    "equipment": {
+      "type": "Skid Steer",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S008"
+    },
+    "operators": {
+      "name": "Unassigned"
+    }
+  },
+  {
+    "id": "R-1088",
+    "equipment_id": "EQX1088",
+    "site_id": "S001",
+    "operator_id": "OP101",
+    "check_in_date": "2025-04-09",
+    "check_out_date": "2025-05-13",
+    "engine_hours_day": 6.5,
+    "idle_hours_day": 9,
+    "fuel_level": 77,
+    "notes": "Telemetry logged: engine 6.5h/day, idle 9h/day.",
+    "equipment": {
+      "type": "Excavator",
+      "status": "Available"
+    },
+    "sites": {
+      "name": "Highway Construction Zone A"
+    },
+    "operators": {
+      "name": "Operator OP101"
+    }
+  },
+  {
+    "id": "R-1089",
+    "equipment_id": "EQX1089",
+    "site_id": "S001",
+    "operator_id": "OP102",
+    "check_in_date": "2025-05-10",
+    "check_out_date": "2025-06-14",
+    "engine_hours_day": 0.5,
+    "idle_hours_day": 0,
+    "fuel_level": 80,
+    "notes": "Telemetry logged: engine 0.5h/day, idle 0h/day.",
+    "equipment": {
+      "type": "Crane",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S001"
+    },
+    "operators": {
+      "name": "Operator OP102"
+    }
+  },
+  {
+    "id": "R-1090",
+    "equipment_id": "EQX1090",
+    "site_id": "S002",
+    "operator_id": "OP103",
+    "check_in_date": "2025-01-11",
+    "check_out_date": "2025-02-15",
+    "engine_hours_day": 3.5,
+    "idle_hours_day": 2,
+    "fuel_level": 62,
+    "notes": "Telemetry logged: engine 3.5h/day, idle 2h/day.",
+    "equipment": {
+      "type": "Bulldozer",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S002"
+    },
+    "operators": {
+      "name": "Operator OP103"
+    }
+  },
+  {
+    "id": "R-1091",
+    "equipment_id": "EQX1091",
+    "site_id": "S003",
+    "operator_id": "OP106",
+    "check_in_date": "2025-02-12",
+    "check_out_date": "2025-03-16",
+    "engine_hours_day": 6.5,
+    "idle_hours_day": 4,
+    "fuel_level": 86,
+    "notes": "Telemetry logged: engine 6.5h/day, idle 4h/day.",
+    "equipment": {
+      "type": "Grader",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S003"
+    },
+    "operators": {
+      "name": "Operator OP106"
+    }
+  },
+  {
+    "id": "R-1092",
+    "equipment_id": "EQX1092",
+    "site_id": "S004",
+    "operator_id": "OP114",
+    "check_in_date": "2025-03-13",
+    "check_out_date": "2025-04-17",
+    "engine_hours_day": 0.5,
+    "idle_hours_day": 6,
+    "fuel_level": 72,
+    "notes": "Telemetry logged: engine 0.5h/day, idle 6h/day.",
+    "equipment": {
+      "type": "Loader",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S004"
+    },
+    "operators": {
+      "name": "Operator OP114"
+    }
+  },
+  {
+    "id": "R-1093",
+    "equipment_id": "EQX1093",
+    "site_id": "S005",
+    "operator_id": "OP203",
+    "check_in_date": "2025-04-14",
+    "check_out_date": "2025-05-18",
+    "engine_hours_day": 3.5,
+    "idle_hours_day": 8,
+    "fuel_level": 77,
+    "notes": "Telemetry logged: engine 3.5h/day, idle 8h/day.",
+    "equipment": {
+      "type": "Dump Truck",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S005"
+    },
+    "operators": {
+      "name": "Operator OP203"
+    }
+  },
+  {
+    "id": "R-1094",
+    "equipment_id": "EQX1094",
+    "site_id": "S006",
+    "operator_id": "OP205",
+    "check_in_date": "2025-05-15",
+    "check_out_date": "2025-06-19",
+    "engine_hours_day": 6.5,
+    "idle_hours_day": 10,
+    "fuel_level": 86,
+    "notes": "Telemetry logged: engine 6.5h/day, idle 10h/day.",
+    "equipment": {
+      "type": "Backhoe",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S006"
+    },
+    "operators": {
+      "name": "Operator OP205"
+    }
+  },
+  {
+    "id": "R-1095",
+    "equipment_id": "EQX1095",
+    "site_id": "S007",
+    "operator_id": "OP301",
+    "check_in_date": "2025-01-16",
+    "check_out_date": "2025-02-20",
+    "engine_hours_day": 0.5,
+    "idle_hours_day": 1,
+    "fuel_level": 61,
+    "notes": "Telemetry logged: engine 0.5h/day, idle 1h/day.",
+    "equipment": {
+      "type": "Forklift",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S007"
+    },
+    "operators": {
+      "name": "Operator OP301"
+    }
+  },
+  {
+    "id": "R-1096",
+    "equipment_id": "EQX1096",
+    "site_id": "S008",
+    "operator_id": "OP308",
+    "check_in_date": "2025-02-17",
+    "check_out_date": "2025-03-21",
+    "engine_hours_day": 3.5,
+    "idle_hours_day": 3,
+    "fuel_level": 76,
+    "notes": "Telemetry logged: engine 3.5h/day, idle 3h/day.",
+    "equipment": {
+      "type": "Compactor",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S008"
+    },
+    "operators": {
+      "name": "Operator OP308"
+    }
+  },
+  {
+    "id": "R-1097",
+    "equipment_id": "EQX1097",
+    "site_id": "S001",
+    "operator_id": "OP101",
+    "check_in_date": "2025-03-18",
+    "check_out_date": "2025-04-22",
+    "engine_hours_day": 6.5,
+    "idle_hours_day": 5,
+    "fuel_level": 66,
+    "notes": "Telemetry logged: engine 6.5h/day, idle 5h/day.",
+    "equipment": {
+      "type": "Skid Steer",
+      "status": "Available"
+    },
+    "sites": {
+      "name": "Highway Construction Zone A"
+    },
+    "operators": {
+      "name": "Unassigned"
+    }
+  },
+  {
+    "id": "R-1098",
+    "equipment_id": "EQX1098",
+    "site_id": "S001",
+    "operator_id": "OP101",
+    "check_in_date": "2025-04-19",
+    "check_out_date": "2025-05-23",
+    "engine_hours_day": 0.5,
+    "idle_hours_day": 7,
+    "fuel_level": 82,
+    "notes": "Telemetry logged: engine 0.5h/day, idle 7h/day.",
+    "equipment": {
+      "type": "Excavator",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S001"
+    },
+    "operators": {
+      "name": "Operator OP101"
+    }
+  },
+  {
+    "id": "R-1099",
+    "equipment_id": "EQX1099",
+    "site_id": "S002",
+    "operator_id": "OP102",
+    "check_in_date": "2025-05-20",
+    "check_out_date": "2025-06-24",
+    "engine_hours_day": 3.5,
+    "idle_hours_day": 9,
+    "fuel_level": 94,
+    "notes": "Telemetry logged: engine 3.5h/day, idle 9h/day.",
+    "equipment": {
+      "type": "Crane",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S002"
+    },
+    "operators": {
+      "name": "Operator OP102"
+    }
+  },
+  {
+    "id": "R-1100",
+    "equipment_id": "EQX1100",
+    "site_id": "S003",
+    "operator_id": "OP103",
+    "check_in_date": "2025-01-01",
+    "check_out_date": "2025-02-05",
+    "engine_hours_day": 6.5,
+    "idle_hours_day": 0,
+    "fuel_level": 74,
+    "notes": "Telemetry logged: engine 6.5h/day, idle 0h/day.",
+    "equipment": {
+      "type": "Bulldozer",
+      "status": "Active"
+    },
+    "sites": {
+      "name": "Site S003"
+    },
+    "operators": {
+      "name": "Operator OP103"
+    }
+  }
 ];
 
 const SEED_ALERTS = [

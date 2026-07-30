@@ -253,29 +253,31 @@ const CustomerEquipment = () => {
               }`}
               onClick={() => isAvailable && handleOpenBookingModal(item)}
             >
-              <div className="h-44 bg-surface-container relative overflow-hidden">
-                <div
-                  className="w-full h-full bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
-                  style={{
-                    backgroundImage: `url(${item.image || '/bg_industrial.png'})`,
-                  }}
-                ></div>
-                <div className="absolute top-sm right-sm">
-                  <span
-                    className={`px-sm py-base rounded-full font-label-bold text-[10px] uppercase tracking-wider shadow-md ${
-                      item.status === 'Available'
-                        ? 'bg-status-success text-white'
-                        : item.status === 'In Use'
-                        ? 'bg-status-warning text-on-surface'
-                        : 'bg-status-error text-white'
-                    }`}
-                  >
-                    ● {item.status}
-                  </span>
+              <div className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 p-md flex items-center justify-between text-white border-b-2 border-[#FFCD00]">
+                <div className="flex items-center gap-2">
+                  <div className="w-10 h-10 rounded-lg bg-[#FFCD00] text-gray-950 flex items-center justify-center font-bold">
+                    <span className="material-symbols-outlined text-xl">precision_manufacturing</span>
+                  </div>
+                  <div>
+                    <span className="font-mono font-black text-sm text-[#FFCD00] block">
+                      {item.equipment_id || item.id}
+                    </span>
+                    <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">
+                      {item.type}
+                    </span>
+                  </div>
                 </div>
-                <div className="absolute bottom-sm left-sm bg-black/60 backdrop-blur-md px-xs py-1 rounded text-white font-label-bold text-xs">
-                  {item.equipment_id || item.id}
-                </div>
+                <span
+                  className={`px-2.5 py-1 rounded-full font-label-bold text-[10px] uppercase tracking-wider shadow-md ${
+                    item.status === 'Available'
+                      ? 'bg-emerald-500 text-white'
+                      : item.status === 'In Use' || item.status === 'Active'
+                      ? 'bg-amber-500 text-gray-950 font-bold'
+                      : 'bg-rose-500 text-white'
+                  }`}
+                >
+                  ● {item.status}
+                </span>
               </div>
 
               <div className="p-md flex-1 flex flex-col justify-between">
