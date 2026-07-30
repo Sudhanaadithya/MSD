@@ -4,6 +4,7 @@ import { AuthProvider } from './contexts/AuthContext';
 import { ToastProvider } from './contexts/ToastContext';
 import { RentalProvider } from './contexts/RentalContext';
 import ProtectedRoute from './components/ProtectedRoute';
+import Chatbot from './components/Chatbot';
 
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
@@ -90,6 +91,7 @@ function App() {
               <Route path="/dashboard" element={<Navigate to="/employee/dashboard" replace />} />
               <Route path="*" element={<Navigate to="/login" replace />} />
             </Routes>
+            <Chatbot />
           </Router>
         </RentalProvider>
       </AuthProvider>

@@ -2,7 +2,6 @@ import React from 'react';
 import { Outlet } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import Header from './Header';
-import Chatbot from './Chatbot';
 
 const DashboardLayout = () => {
   return (
@@ -14,7 +13,6 @@ const DashboardLayout = () => {
           <Outlet />
         </main>
       </div>
-      <Chatbot />
     </div>
   );
 };

@@ -2,7 +2,6 @@ import React from 'react';
 import { Outlet } from 'react-router-dom';
 import EmployeeSidebar from './EmployeeSidebar';
 import Header from './Header';
-import Chatbot from './Chatbot';
 
 const EmployeeLayout = () => {
   return (
@@ -14,7 +13,6 @@ const EmployeeLayout = () => {
           <Outlet />
         </main>
       </div>
-      <Chatbot />
     </div>
   );
 };
