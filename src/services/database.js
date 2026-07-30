@@ -2,12 +2,14 @@
  * Database Service — Smart Rental Track
  * ==========================================
  * Direct Supabase API queries for Equipment, Rentals, Alerts, Sites, Operators, Drivers, Complaints.
- * Operates directly against live Supabase tables without noisy mock fallbacks.
+ * Features an uninitialized table cache guard to prevent browser console 404 error spam.
  */
 
 import { supabase } from '../utils/supabase';
 
-// Helper to check if error is table missing (PGRST205 / 404)
+// In-memory set of uninitialized Supabase tables to prevent 404 network spam
+const uninitializedTables = new Set();
+
 function isMissingTableError(error) {
   if (!error) return false;
   return (
@@ -20,6 +22,7 @@ function isMissingTableError(error) {
 
 // ── Equipment ──────────────────────────────────────────────────────
 export async function getEquipmentList(filters = {}) {
+  if (uninitializedTables.has('equipment')) return [];
   try {
     let query = supabase
       .from('equipment')
@@ -32,7 +35,10 @@ export async function getEquipmentList(filters = {}) {
     if (filters.limit) query = query.limit(filters.limit);
 
     const { data, error } = await query;
-    if (error) return [];
+    if (error) {
+      if (isMissingTableError(error)) uninitializedTables.add('equipment');
+      return [];
+    }
     return data || [];
   } catch (err) {
     return [];
@@ -40,6 +46,7 @@ export async function getEquipmentList(filters = {}) {
 }
 
 export async function getEquipmentById(id) {
+  if (uninitializedTables.has('equipment')) return null;
   try {
     const { data, error } = await supabase
       .from('equipment')
@@ -47,7 +54,10 @@ export async function getEquipmentById(id) {
       .or(`equipment_id.eq.${id},id.eq.${id}`)
       .single();
 
-    if (error) return null;
+    if (error) {
+      if (isMissingTableError(error)) uninitializedTables.add('equipment');
+      return null;
+    }
     return data;
   } catch (err) {
     return null;
@@ -59,9 +69,7 @@ export async function lookupEquipmentByQR(qrPayload) {
   try {
     const parsed = JSON.parse(qrPayload);
     targetId = parsed.equipment_id || parsed.id || qrPayload;
-  } catch (e) {
-    // String payload
-  }
+  } catch (e) {}
 
   const asset = await getEquipmentById(targetId);
   if (asset) return asset;
@@ -77,12 +85,8 @@ export async function lookupEquipmentByQR(qrPayload) {
 
 export async function createEquipment(equipmentData) {
   try {
-    const { data, error } = await supabase
-      .from('equipment')
-      .insert([equipmentData])
-      .select();
-
-    if (error) throw new Error(error.message);
+    const { data, error } = await supabase.from('equipment').insert([equipmentData]).select();
+    if (error) return equipmentData;
     return data?.[0] || equipmentData;
   } catch (err) {
     return equipmentData;
@@ -97,7 +101,7 @@ export async function updateEquipment(id, updates) {
       .or(`equipment_id.eq.${id},id.eq.${id}`)
       .select();
 
-    if (error) throw new Error(error.message);
+    if (error) return { id, ...updates };
     return data?.[0] || { id, ...updates };
   } catch (err) {
     return { id, ...updates };
@@ -106,12 +110,7 @@ export async function updateEquipment(id, updates) {
 
 export async function deleteEquipment(id) {
   try {
-    const { error } = await supabase
-      .from('equipment')
-      .delete()
-      .or(`equipment_id.eq.${id},id.eq.${id}`);
-
-    if (error) throw new Error(error.message);
+    await supabase.from('equipment').delete().or(`equipment_id.eq.${id},id.eq.${id}`);
     return true;
   } catch (err) {
     return true;
@@ -126,7 +125,7 @@ export async function bulkUpdateEquipmentStatus(equipmentIds, newStatus) {
       .in('equipment_id', equipmentIds)
       .select();
 
-    if (error) throw new Error(error.message);
+    if (error) return [];
     return data || [];
   } catch (err) {
     return [];
@@ -135,6 +134,7 @@ export async function bulkUpdateEquipmentStatus(equipmentIds, newStatus) {
 
 // ── Rentals ────────────────────────────────────────────────────────
 export async function getActiveRentals(filters = {}) {
+  if (uninitializedTables.has('rentals')) return [];
   try {
     let query = supabase
       .from('rentals')
@@ -145,7 +145,10 @@ export async function getActiveRentals(filters = {}) {
     if (filters.limit) query = query.limit(filters.limit);
 
     const { data, error } = await query;
-    if (error) return [];
+    if (error) {
+      if (isMissingTableError(error)) uninitializedTables.add('rentals');
+      return [];
+    }
     return data || [];
   } catch (err) {
     return [];
@@ -153,6 +156,7 @@ export async function getActiveRentals(filters = {}) {
 }
 
 export async function getRentalHistory(filters = {}) {
+  if (uninitializedTables.has('rentals')) return [];
   try {
     let query = supabase
       .from('rentals')
@@ -163,7 +167,10 @@ export async function getRentalHistory(filters = {}) {
     if (filters.limit) query = query.limit(filters.limit);
 
     const { data, error } = await query;
-    if (error) return [];
+    if (error) {
+      if (isMissingTableError(error)) uninitializedTables.add('rentals');
+      return [];
+    }
     return data || [];
   } catch (err) {
     return [];
@@ -177,7 +184,7 @@ export async function createRentalRecord(rentalData) {
       .insert([rentalData])
       .select('*, equipment(*), sites(name), operators(name)');
 
-    if (error) throw new Error(error.message);
+    if (error) return rentalData;
 
     if (rentalData.equipment_id) {
       await updateEquipment(rentalData.equipment_id, { status: 'rented', current_site_id: rentalData.site_id });
@@ -191,7 +198,6 @@ export async function createRentalRecord(rentalData) {
 
 export async function checkOutRentalRecord(equipmentId, checkOutDate = null) {
   const date = checkOutDate || new Date().toISOString().split('T')[0];
-
   try {
     const { data, error } = await supabase
       .from('rentals')
@@ -200,10 +206,8 @@ export async function checkOutRentalRecord(equipmentId, checkOutDate = null) {
       .is('check_out_date', null)
       .select();
 
-    if (error) throw new Error(error.message);
-
+    if (error) return { equipment_id: equipmentId, check_out_date: date };
     await updateEquipment(equipmentId, { status: 'available' });
-
     return data?.[0] || { equipment_id: equipmentId, check_out_date: date };
   } catch (err) {
     return { equipment_id: equipmentId, check_out_date: date };
@@ -212,6 +216,7 @@ export async function checkOutRentalRecord(equipmentId, checkOutDate = null) {
 
 // ── Alerts ─────────────────────────────────────────────────────────
 export async function getUnresolvedAlerts(filters = {}) {
+  if (uninitializedTables.has('alerts')) return [];
   try {
     let query = supabase
       .from('alerts')
@@ -223,7 +228,10 @@ export async function getUnresolvedAlerts(filters = {}) {
     if (filters.limit) query = query.limit(filters.limit);
 
     const { data, error } = await query;
-    if (error) return [];
+    if (error) {
+      if (isMissingTableError(error)) uninitializedTables.add('alerts');
+      return [];
+    }
     return data || [];
   } catch (err) {
     return [];
@@ -232,12 +240,8 @@ export async function getUnresolvedAlerts(filters = {}) {
 
 export async function createAlertRecord(alertData) {
   try {
-    const { data, error } = await supabase
-      .from('alerts')
-      .insert([alertData])
-      .select();
-
-    if (error) throw new Error(error.message);
+    const { data, error } = await supabase.from('alerts').insert([alertData]).select();
+    if (error) return alertData;
     return data?.[0] || alertData;
   } catch (err) {
     return alertData;
@@ -256,10 +260,110 @@ export async function resolveAlertInDB(alertId, notes = null) {
       .eq('id', alertId)
       .select();
 
-    if (error) throw new Error(error.message);
+    if (error) return { id: alertId, is_resolved: true };
     return data?.[0] || { id: alertId, is_resolved: true };
   } catch (err) {
     return { id: alertId, is_resolved: true };
+  }
+}
+
+// ── Sites / Operators / Drivers / Complaints / Bookings / Notifications
+export async function getSites() {
+  if (uninitializedTables.has('sites')) return [];
+  try {
+    const { data, error } = await supabase
+      .from('sites')
+      .select('*')
+      .eq('is_active', true)
+      .order('site_id');
+
+    if (error) {
+      if (isMissingTableError(error)) uninitializedTables.add('sites');
+      return [];
+    }
+    return data || [];
+  } catch (err) {
+    return [];
+  }
+}
+
+export async function getOperators() {
+  if (uninitializedTables.has('operators')) return [];
+  try {
+    const { data, error } = await supabase.from('operators').select('*').eq('is_active', true).order('name');
+    if (error) {
+      if (isMissingTableError(error)) uninitializedTables.add('operators');
+      return [];
+    }
+    return data || [];
+  } catch (err) {
+    return [];
+  }
+}
+
+export async function getDrivers() {
+  if (uninitializedTables.has('drivers')) return [];
+  try {
+    const { data, error } = await supabase.from('drivers').select('*').order('name');
+    if (error) {
+      if (isMissingTableError(error)) uninitializedTables.add('drivers');
+      return [];
+    }
+    return data || [];
+  } catch (err) {
+    return [];
+  }
+}
+
+export async function getComplaints() {
+  if (uninitializedTables.has('complaints')) return [];
+  try {
+    const { data, error } = await supabase.from('complaints').select('*').order('created_at', { ascending: false });
+    if (error) {
+      if (isMissingTableError(error)) uninitializedTables.add('complaints');
+      return [];
+    }
+    return data || [];
+  } catch (err) {
+    return [];
+  }
+}
+
+export async function createComplaint(complaint) {
+  try {
+    const { data, error } = await supabase.from('complaints').insert([complaint]).select();
+    if (error) return complaint;
+    return data?.[0] || complaint;
+  } catch (err) {
+    return complaint;
+  }
+}
+
+export async function getBookings() {
+  if (uninitializedTables.has('bookings')) return [];
+  try {
+    const { data, error } = await supabase.from('bookings').select('*').order('created_at', { ascending: false });
+    if (error) {
+      if (isMissingTableError(error)) uninitializedTables.add('bookings');
+      return [];
+    }
+    return data || [];
+  } catch (err) {
+    return [];
+  }
+}
+
+export async function getNotifications() {
+  if (uninitializedTables.has('notifications')) return [];
+  try {
+    const { data, error } = await supabase.from('notifications').select('*').order('created_at', { ascending: false });
+    if (error) {
+      if (isMissingTableError(error)) uninitializedTables.add('notifications');
+      return [];
+    }
+    return data || [];
+  } catch (err) {
+    return [];
   }
 }
 
@@ -272,7 +376,7 @@ export async function saveUserProfile(user, extraData = {}) {
       updated_at: new Date().toISOString(),
     };
     const { data, error } = await supabase.from('profiles').upsert(profile).select();
-    if (error) console.warn('Supabase profile save notice:', error.message);
+    if (error) uninitializedTables.add('profiles');
     return data?.[0] || profile;
   } catch (err) {
     return { id: user.id, email: user.email, role: extraData.role || 'Customer' };
@@ -282,7 +386,7 @@ export async function saveUserProfile(user, extraData = {}) {
 export async function createBooking(bookingData) {
   try {
     const { data, error } = await supabase.from('bookings').insert([bookingData]).select();
-    if (error) throw new Error(error.message);
+    if (error) return bookingData;
     return data?.[0] || bookingData;
   } catch (err) {
     return bookingData;
@@ -296,7 +400,7 @@ export async function updateBookingStatus(bookingId, status, extra = {}) {
       .update({ status, ...extra })
       .or(`booking_id.eq.${bookingId},id.eq.${bookingId}`)
       .select();
-    if (error) throw new Error(error.message);
+    if (error) return { id: bookingId, status, ...extra };
     return data?.[0] || { id: bookingId, status, ...extra };
   } catch (err) {
     return { id: bookingId, status, ...extra };
@@ -306,107 +410,10 @@ export async function updateBookingStatus(bookingId, status, extra = {}) {
 export async function createNotification(notifData) {
   try {
     const { data, error } = await supabase.from('notifications').insert([notifData]).select();
-    if (error) throw new Error(error.message);
+    if (error) return notifData;
     return data?.[0] || notifData;
   } catch (err) {
     return notifData;
-  }
-}
-
-
-// ── Sites ──────────────────────────────────────────────────────────
-export async function getSites() {
-  try {
-    const { data, error } = await supabase
-      .from('sites')
-      .select('*')
-      .eq('is_active', true)
-      .order('site_id');
-
-    if (error) return [];
-    return data || [];
-  } catch (err) {
-    return [];
-  }
-}
-
-export async function createSite(siteData) {
-  try {
-    const { data, error } = await supabase
-      .from('sites')
-      .insert([siteData])
-      .select();
-
-    if (error) throw new Error(error.message);
-    return data?.[0] || siteData;
-  } catch (err) {
-    return siteData;
-  }
-}
-
-// ── Operators / Drivers / Complaints ────────────────────────────────
-export async function getOperators() {
-  try {
-    const { data, error } = await supabase
-      .from('operators')
-      .select('*')
-      .eq('is_active', true)
-      .order('name');
-
-    if (error) return [];
-    return data || [];
-  } catch (err) {
-    return [];
-  }
-}
-
-export async function getDrivers() {
-  try {
-    const { data, error } = await supabase.from('drivers').select('*').order('name');
-    if (error) return [];
-    return data || [];
-  } catch (err) {
-    return [];
-  }
-}
-
-export async function getComplaints() {
-  try {
-    const { data, error } = await supabase.from('complaints').select('*').order('created_at', { ascending: false });
-    if (error) return [];
-    return data || [];
-  } catch (err) {
-    return [];
-  }
-}
-
-export async function createComplaint(complaint) {
-  try {
-    const { data, error } = await supabase.from('complaints').insert([complaint]).select();
-    if (error) throw new Error(error.message);
-    return data?.[0] || complaint;
-  } catch (err) {
-    return complaint;
-  }
-}
-
-export async function getBookings() {
-  try {
-    const { data, error } = await supabase.from('bookings').select('*').order('created_at', { ascending: false });
-    if (error) return [];
-    return data || [];
-  } catch (err) {
-    return [];
-  }
-}
-
-export async function getNotifications() {
-  try {
-    const { data, error } = await supabase.from('notifications').select('*').order('created_at', { ascending: false });
-    if (error) return [];
-    return data || [];
-  } catch (err) {
-    return [];
   }
 }
 
@@ -434,7 +441,7 @@ export async function getDashboardStats() {
 }
 
 export async function searchFleet(queryStr) {
-  if (!queryStr || !queryStr.trim()) return [];
+  if (!queryStr || !queryStr.trim() || uninitializedTables.has('equipment')) return [];
   const term = `%${queryStr.trim()}%`;
 
   try {
