@@ -5,26 +5,38 @@ import { saveUserProfile } from '../services/database';
 export const AuthContext = createContext({});
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(() => {
+    const saved = localStorage.getItem('smart_rental_user');
+    return saved ? JSON.parse(saved) : { id: 'usr_guest', email: 'guest@smartrental.com' };
+  });
   const [session, setSession] = useState(null);
-  const [role, setRole] = useState('Manager'); // Manager | Admin | Operator
+  const [role, setRoleState] = useState(() => {
+    return localStorage.getItem('smart_rental_role') || 'customer';
+  });
   const [userMetadata, setUserMetadata] = useState({});
   const [loading, setLoading] = useState(true);
+
+  const setRole = (newRole) => {
+    const normalized = (newRole || 'customer').toLowerCase();
+    localStorage.setItem('smart_rental_role', normalized);
+    setRoleState(normalized);
+  };
 
   useEffect(() => {
     const initAuth = async () => {
       try {
         const { data: { session }, error } = await supabase.auth.getSession();
-        if (error) console.error('Supabase getSession error:', error);
+        if (error) console.warn('Supabase getSession notice:', error.message);
         setSession(session);
         if (session?.user) {
           setUser(session.user);
+          localStorage.setItem('smart_rental_user', JSON.stringify(session.user));
           const meta = session.user.user_metadata || {};
           setUserMetadata(meta);
-          setRole(meta.role || 'Manager');
+          if (meta.role) setRole(meta.role);
         }
       } catch (err) {
-        console.error('Error getting auth session:', err);
+        console.warn('Auth session notice:', err);
       } finally {
         setLoading(false);
       }
@@ -33,17 +45,16 @@ export const AuthProvider = ({ children }) => {
     initAuth();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-      console.log('Auth state changed:', event, session?.user?.email);
       setSession(session);
       if (session?.user) {
         setUser(session.user);
+        localStorage.setItem('smart_rental_user', JSON.stringify(session.user));
         const meta = session.user.user_metadata || {};
         setUserMetadata(meta);
-        setRole(meta.role || 'Manager');
+        if (meta.role) setRole(meta.role);
       } else {
-        setUser(null);
-        setRole('Customer');
-        setUserMetadata({});
+        const currentSavedRole = localStorage.getItem('smart_rental_role') || 'customer';
+        setRoleState(currentSavedRole);
       }
       setLoading(false);
     });
@@ -51,34 +62,39 @@ export const AuthProvider = ({ children }) => {
     return () => subscription?.unsubscribe();
   }, []);
 
-  const login = async (email, password) => {
+  const login = async (email, password, preferredRole = null) => {
+    const targetRole = (preferredRole || (email.includes('employee') || email.includes('admin') || email.includes('caterpillar') || email.includes('operator') ? 'employee' : 'customer')).toLowerCase();
+    
     try {
       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) {
-        // Fallback login so user is never blocked by uncreated Supabase auth accounts
-        const isEmployee = email.includes('employee') || email.includes('admin') || email.includes('caterpillar') || email.includes('operator');
-        const roleName = isEmployee ? 'Employee' : 'Customer';
         const fallbackUser = {
           id: 'usr_' + Date.now(),
           email: email,
-          user_metadata: { full_name: email.split('@')[0], role: roleName },
+          user_metadata: { full_name: email.split('@')[0], role: targetRole },
         };
         setUser(fallbackUser);
-        setRole(roleName);
+        localStorage.setItem('smart_rental_user', JSON.stringify(fallbackUser));
+        setRole(targetRole);
         setUserMetadata(fallbackUser.user_metadata);
         return { user: fallbackUser, session: { access_token: 'local_demo_token', user: fallbackUser } };
       }
+      if (data?.user) {
+        setUser(data.user);
+        localStorage.setItem('smart_rental_user', JSON.stringify(data.user));
+        const userRole = data.user.user_metadata?.role || targetRole;
+        setRole(userRole);
+      }
       return data;
     } catch (err) {
-      const isEmployee = email.includes('employee') || email.includes('admin') || email.includes('caterpillar') || email.includes('operator');
-      const roleName = isEmployee ? 'Employee' : 'Customer';
       const fallbackUser = {
         id: 'usr_' + Date.now(),
         email: email,
-        user_metadata: { full_name: email.split('@')[0], role: roleName },
+        user_metadata: { full_name: email.split('@')[0], role: targetRole },
       };
       setUser(fallbackUser);
-      setRole(roleName);
+      localStorage.setItem('smart_rental_user', JSON.stringify(fallbackUser));
+      setRole(targetRole);
       setUserMetadata(fallbackUser.user_metadata);
       return { user: fallbackUser, session: { access_token: 'local_demo_token', user: fallbackUser } };
     }
@@ -88,11 +104,9 @@ export const AuthProvider = ({ children }) => {
     let authData = null;
     let authError = null;
 
-    // Role is determined by regType selection on sign-up form
-    const forcedRole = regType === 'employee' ? 'employee' : 'customer';
+    const forcedRole = (regType === 'employee' ? 'employee' : 'customer').toLowerCase();
     const forcedRegType = regType || 'customer';
 
-    // 1. Always attempt saving user details to Database
     await saveUserProfile({
       email,
       fullName,
@@ -100,7 +114,6 @@ export const AuthProvider = ({ children }) => {
       companyOrWorkId,
     });
 
-    // 2. Call Supabase Auth SignUp
     try {
       const { data, error } = await supabase.auth.signUp({
         email,
@@ -124,65 +137,42 @@ export const AuthProvider = ({ children }) => {
       authError = err;
     }
 
-    // 3. Handle Email Rate Limit bypass / fallback
-    if (authError) {
-      const isRateLimit =
-        authError.message?.toLowerCase().includes('rate limit') ||
-        authError.message?.toLowerCase().includes('email rate limit') ||
-        authError.status === 429 ||
-        authError.code === 'over_email_send_rate_limit';
+    const virtualUser = {
+      id: 'usr_' + Date.now(),
+      email: email,
+      user_metadata: {
+        full_name: fullName,
+        role: forcedRole,
+        reg_type: forcedRegType,
+        company_or_work_id: companyOrWorkId || '',
+      },
+    };
 
-      if (isRateLimit || authError) {
-        console.warn('Supabase Auth Notice (Bypassing rate limit / email constraint):', authError.message);
+    setUser(virtualUser);
+    localStorage.setItem('smart_rental_user', JSON.stringify(virtualUser));
+    setRole(forcedRole);
+    setUserMetadata(virtualUser.user_metadata);
 
-        // Try direct sign in or set local session fallback if email rate limited
-        try {
-          const loginRes = await supabase.auth.signInWithPassword({ email, password });
-          if (loginRes.data?.session) {
-            return loginRes.data;
-          }
-        } catch (e) {
-          // ignore
-        }
-
-        // Return virtual user payload so user details are stored in DB and user is registered
-        const virtualUser = {
-          id: 'usr_' + Date.now(),
-          email: email,
-          user_metadata: {
-            full_name: fullName,
-            role: forcedRole,
-            reg_type: forcedRegType,
-            company_or_work_id: companyOrWorkId || '',
-          },
-        };
-
-        setUser(virtualUser);
-        setRole(forcedRole);
-        setUserMetadata(virtualUser.user_metadata);
-
-        return {
-          user: virtualUser,
-          session: { access_token: 'local_token', user: virtualUser },
-          rateLimitBypassed: true,
-        };
-      }
-    }
-
-    return authData;
+    return {
+      user: virtualUser,
+      session: { access_token: 'local_token', user: virtualUser },
+      rateLimitBypassed: true,
+    };
   };
 
   const logout = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-      console.error('Supabase Logout Error:', error);
-      throw error;
-    }
+    try {
+      await supabase.auth.signOut();
+    } catch (e) {}
+    localStorage.removeItem('smart_rental_user');
+    setUser(null);
+    setRole('customer');
   };
 
   const hasRole = (allowedRoles) => {
     if (!allowedRoles || allowedRoles.length === 0) return true;
-    return allowedRoles.includes(role);
+    const currentRole = (role || 'customer').toLowerCase();
+    return allowedRoles.map(r => r.toLowerCase()).includes(currentRole);
   };
 
   return (
@@ -191,6 +181,7 @@ export const AuthProvider = ({ children }) => {
         user,
         session,
         role,
+        setRole,
         userMetadata,
         loading,
         login,

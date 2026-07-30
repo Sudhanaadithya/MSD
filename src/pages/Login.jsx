@@ -23,14 +23,14 @@ const Login = () => {
     setIsSubmitting(true);
 
     try {
-      const data = await login(email, password);
-      const userRole = (data?.user?.user_metadata?.role || accessType).toLowerCase();
-      addToast(`Authenticated successfully as ${data?.user?.user_metadata?.role || accessType}`, 'success', 'Command Station Active');
+      const data = await login(email, password, accessType);
+      const userRole = (accessType || data?.user?.user_metadata?.role || 'customer').toLowerCase();
+      addToast(`Authenticated successfully as ${userRole.toUpperCase()}`, 'success', 'Command Station Active');
 
       if (userRole === 'customer') {
-        navigate('/customer/equipment');
+        navigate('/customer/equipment', { replace: true });
       } else {
-        navigate('/employee/dashboard');
+        navigate('/employee/dashboard', { replace: true });
       }
     } catch (err) {
       const msg = err.message || 'Invalid email or password. Please try again.';
