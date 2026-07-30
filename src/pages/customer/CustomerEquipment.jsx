@@ -33,9 +33,25 @@ const CustomerEquipment = () => {
   const [licenseNumber, setLicenseNumber] = useState('');
   const [licenseError, setLicenseError] = useState('');
 
-  // Final Confirmation State
+  // Final Confirmation State & 250s Timer
   const [createdBooking, setCreatedBooking] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [qrTimer, setQrTimer] = useState(250);
+
+  useEffect(() => {
+    if (bookingStep !== 4 || !createdBooking) return;
+    setQrTimer(250);
+    const interval = setInterval(() => {
+      setQrTimer((prev) => (prev <= 1 ? 0 : prev - 1));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [bookingStep, createdBooking]);
+
+  const handleRefreshQRToken = () => {
+    setQrTimer(250);
+    addToast('QR Code Security Token Refreshed (250s Validity).', 'info', 'Token Renewed');
+  };
+
 
   // Calculate rental days and cost
   const rentalDays = useMemo(() => {
@@ -659,9 +675,29 @@ const CustomerEquipment = () => {
                   </p>
                 </div>
 
+                {/* 250-Second Countdown Security Banner */}
+                <div className={`p-2 rounded-xl border max-w-md mx-auto flex items-center justify-between text-xs ${qrTimer > 30 ? 'bg-gray-900 border-gray-700 text-[#FFCD00]' : 'bg-red-950/80 border-red-500 text-red-300 animate-pulse'}`}>
+                  <div className="flex items-center gap-2">
+                    <span className="material-symbols-outlined text-lg">timer</span>
+                    <span className="font-mono font-black">
+                      {qrTimer > 0 ? `QR Validity: ${qrTimer}s / 250s` : '⚠️ QR Code Expired (250s Limit)'}
+                    </span>
+                  </div>
+                  {qrTimer === 0 ? (
+                    <button
+                      onClick={handleRefreshQRToken}
+                      className="px-2 py-1 bg-[#FFCD00] text-gray-950 text-[10px] font-black rounded uppercase hover:bg-amber-400"
+                    >
+                      🔄 Refresh QR (250s)
+                    </button>
+                  ) : (
+                    <span className="text-[10px] font-bold text-gray-400 uppercase">250s Security Token</span>
+                  )}
+                </div>
+
                 {/* Display Generated QR Code */}
                 {createdBooking.qr_code && (
-                  <div className="p-md bg-white border-4 border-gray-900 rounded-xl inline-block shadow-2xl relative group">
+                  <div className={`p-md bg-white border-4 border-gray-900 rounded-xl inline-block shadow-2xl relative transition-all ${qrTimer === 0 ? 'opacity-30 blur-[2px]' : ''}`}>
                     <img
                       src={createdBooking.qr_code}
                       alt="Rental Handover QR Code"
@@ -670,6 +706,12 @@ const CustomerEquipment = () => {
                     <span className="font-mono text-xs font-black text-gray-900 block mt-xs bg-gray-100 py-1 px-2 rounded border border-gray-300">
                       Booking Ref: {createdBooking.booking_id}
                     </span>
+                  </div>
+                )}
+
+                {qrTimer === 0 && (
+                  <div className="p-2 bg-red-100 text-red-800 text-xs font-bold rounded-lg max-w-md mx-auto border border-red-300">
+                    ⚠️ QR Code security window expired (250 seconds). Click "Refresh QR (250s)" to generate a new scan token.
                   </div>
                 )}
 
