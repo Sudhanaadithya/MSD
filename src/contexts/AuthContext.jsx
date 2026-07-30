@@ -33,7 +33,8 @@ export const AuthProvider = ({ children }) => {
           localStorage.setItem('smart_rental_user', JSON.stringify(session.user));
           const meta = session.user.user_metadata || {};
           setUserMetadata(meta);
-          if (meta.role) setRole(meta.role);
+          const savedRole = localStorage.getItem('smart_rental_role') || meta.role || 'customer';
+          setRole(savedRole);
         }
       } catch (err) {
         console.warn('Auth session notice:', err);
@@ -51,7 +52,8 @@ export const AuthProvider = ({ children }) => {
         localStorage.setItem('smart_rental_user', JSON.stringify(session.user));
         const meta = session.user.user_metadata || {};
         setUserMetadata(meta);
-        if (meta.role) setRole(meta.role);
+        const savedRole = localStorage.getItem('smart_rental_role') || meta.role || 'customer';
+        setRole(savedRole);
       } else {
         const currentSavedRole = localStorage.getItem('smart_rental_role') || 'customer';
         setRoleState(currentSavedRole);
@@ -70,22 +72,23 @@ export const AuthProvider = ({ children }) => {
       throw new Error('Password must be at least 6 characters long.');
     }
 
-    const targetRole = (preferredRole || (email.includes('employee') || email.includes('admin') || email.includes('caterpillar') || email.includes('operator') ? 'employee' : 'customer')).toLowerCase();
+    const activeRole = (preferredRole || (email.includes('employee') || email.includes('admin') || email.includes('caterpillar') || email.includes('operator') ? 'employee' : 'customer')).toLowerCase();
     
+    // Explicitly lock active role immediately
+    setRole(activeRole);
+
     try {
       // 1. Attempt Supabase Cloud Authentication
       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
       
       if (error) {
-        // If Supabase Auth returns explicit error (e.g. invalid credentials)
         if (error.message?.toLowerCase().includes('invalid login credentials') || error.status === 400) {
-          // Check if local account exists or allow demo login for registered roles
           const savedUser = localStorage.getItem('smart_rental_user');
           if (savedUser) {
             const parsed = JSON.parse(savedUser);
             if (parsed.email === email) {
               setUser(parsed);
-              setRole(targetRole);
+              setRole(activeRole);
               return { user: parsed, session: { access_token: 'local_session', user: parsed } };
             }
           }
@@ -97,21 +100,19 @@ export const AuthProvider = ({ children }) => {
       if (data?.user) {
         setUser(data.user);
         localStorage.setItem('smart_rental_user', JSON.stringify(data.user));
-        const userRole = data.user.user_metadata?.role || targetRole;
-        setRole(userRole);
+        setRole(activeRole);
       }
       return data;
     } catch (err) {
-      // If network is offline or uninitialized auth, fallback gracefully for demo accounts
       if (email === 'employee@smartrental.com' || email === 'customer@smartrental.com' || err.message?.includes('Invalid email')) {
         const demoUser = {
-          id: 'usr_' + (email.startsWith('employee') ? 'emp_101' : 'cust_101'),
+          id: 'usr_' + (activeRole === 'employee' ? 'emp_101' : 'cust_101'),
           email: email,
-          user_metadata: { full_name: email.split('@')[0], role: targetRole },
+          user_metadata: { full_name: email.split('@')[0], role: activeRole },
         };
         setUser(demoUser);
         localStorage.setItem('smart_rental_user', JSON.stringify(demoUser));
-        setRole(targetRole);
+        setRole(activeRole);
         setUserMetadata(demoUser.user_metadata);
         return { user: demoUser, session: { access_token: 'demo_token', user: demoUser } };
       }

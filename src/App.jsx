@@ -87,8 +87,15 @@ function App() {
                 <Route path="equipment/:assetId" element={<EquipmentDetail />} />
               </Route>
 
-              {/* Legacy fallback route */}
-              <Route path="/dashboard" element={<Navigate to="/employee/dashboard" replace />} />
+              {/* Legacy & Default Navigation Fallback */}
+              <Route
+                path="/dashboard"
+                element={
+                  <ProtectedRoute allowedRoles={['customer', 'employee', 'admin', 'manager', 'operator']}>
+                    <Navigate to="/customer/equipment" replace />
+                  </ProtectedRoute>
+                }
+              />
               <Route path="*" element={<Navigate to="/login" replace />} />
             </Routes>
             <Chatbot />
