@@ -4068,6 +4068,7 @@ export async function searchFleet(queryStr) {
   }
 }
 
+
 // ── Cloud Database Direct Auto-Seeder ────────────────────────────────
 export async function seedCloudDatabase() {
   const results = {};
@@ -4075,11 +4076,33 @@ export async function seedCloudDatabase() {
     const { error: siteErr } = await supabase.from('sites').upsert(SEED_SITES, { onConflict: 'site_id' });
     results.sites = siteErr ? siteErr.message : 'OK';
 
-    const equipPayload = SEED_EQUIPMENT.map(({ sites, ...rest }) => ({ ...rest, current_site_id: 'S001' }));
+    // Map equipment payload to exact Supabase SQL schema column names (rental_days in snake_case)
+    const equipPayload = SEED_EQUIPMENT.map(e => ({
+      equipment_id: e.equipment_id || e.id,
+      id: e.id || e.equipment_id,
+      type: e.type,
+      status: e.status || 'Available',
+      current_site_id: e.current_site_id || e.site_id || 'S001',
+      site: e.site || 'Highway Construction Zone A',
+      rental_days: e.rentalDays || e.rental_days || '--',
+      operator: e.operator || 'Unassigned',
+    }));
     const { error: eqErr } = await supabase.from('equipment').upsert(equipPayload, { onConflict: 'equipment_id' });
     results.equipment = eqErr ? eqErr.message : 'OK';
 
-    const rentalPayload = SEED_RENTALS.map(({ equipment, sites, operators, ...rest }) => rest);
+    // Map rentals payload to exact Supabase SQL schema column names
+    const rentalPayload = SEED_RENTALS.map(r => ({
+      id: r.id,
+      equipment_id: r.equipment_id,
+      site_id: r.site_id || 'S001',
+      operator_id: r.operator_id || 'OP101',
+      check_in_date: r.check_in_date || new Date().toISOString().split('T')[0],
+      check_out_date: r.check_out_date || null,
+      engine_hours_day: r.engine_hours_day || 8.0,
+      idle_hours_day: r.idle_hours_day || 1.0,
+      fuel_level: r.fuel_level || 85,
+      notes: r.notes || 'Shift log recorded.',
+    }));
     const { error: rentErr } = await supabase.from('rentals').upsert(rentalPayload, { onConflict: 'id' });
     results.rentals = rentErr ? rentErr.message : 'OK';
 
@@ -4098,11 +4121,8 @@ export async function seedCloudDatabase() {
     const { error: cmpErr } = await supabase.from('complaints').upsert(SEED_COMPLAINTS, { onConflict: 'complaint_id' });
     results.complaints = cmpErr ? cmpErr.message : 'OK';
 
-    console.log('[Supabase Cloud Seeder Results]:', results);
     return { success: true, results };
   } catch (err) {
-    console.warn('[Supabase Cloud Seeder Notice]:', err);
     return { success: false, error: err.message };
   }
 }
-
