@@ -53,6 +53,29 @@ export const RentalProvider = ({ children }) => {
     initData();
   }, []);
 
+  // Real-time Dynamic Fuel Level Telemetry Simulation
+  useEffect(() => {
+    const fuelInterval = setInterval(() => {
+      setEquipmentList((prev) =>
+        prev.map((item) => {
+          const currentFuel = item.fuel_level !== undefined ? item.fuel_level : 85;
+          // Random slight consumption for active equipment (-0.2% to -0.5%)
+          const isEngineRunning = item.status === 'In Use' || item.status === 'Active';
+          if (!isEngineRunning) return { ...item, fuel_level: currentFuel };
+
+          let newFuel = currentFuel - (0.1 + Math.random() * 0.3);
+          if (newFuel < 15) newFuel = 95; // Auto-refuel simulation
+          return {
+            ...item,
+            fuel_level: parseFloat(newFuel.toFixed(1)),
+          };
+        })
+      );
+    }, 4000);
+
+    return () => clearInterval(fuelInterval);
+  }, []);
+
   // Add a new booking (Customer flow)
   const addBooking = async (bookingPayload) => {
     const bookingId = generateBookingId();

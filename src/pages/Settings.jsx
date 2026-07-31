@@ -265,6 +265,28 @@ const Settings = () => {
               </div>
               <button className="material-symbols-outlined text-outline hover:text-on-surface">content_copy</button>
             </div>
+            <div className="bg-surface-white p-md rounded-xl shadow-sm flex items-center gap-md hover:bg-surface-container-low transition-colors cursor-pointer"
+                 onClick={async () => {
+                   const { seedCloudDatabase } = await import('../services/database');
+                   const res = await seedCloudDatabase();
+                   if (res.success) {
+                     alert('⚡ Supabase Cloud Database Successfully Populated! 100 Equipment items, Sites & Rentals uploaded.');
+                   } else {
+                     alert(`Supabase Notice: ${res.error || 'Check SQL schema editor.'}`);
+                   }
+                 }}>
+              <div className="bg-emerald-500/10 p-sm rounded-lg">
+                <span className="material-symbols-outlined text-emerald-600">database</span>
+              </div>
+              <div className="flex-1">
+                <p className="font-label-bold text-on-surface">Cloud Database Sync</p>
+                <p className="font-body-sm text-emerald-600 flex items-center gap-1 text-xs">
+                  <span>⚡ Click to Populate 100 Mock Data Items to Supabase</span>
+                </p>
+              </div>
+              <span className="material-symbols-outlined text-outline">sync</span>
+            </div>
+
             <div className="bg-surface-white p-md rounded-xl shadow-sm flex items-center gap-md hover:bg-surface-container-low transition-colors cursor-pointer">
               <div className="bg-[#0061FF]/10 p-sm rounded-lg">
                 <span className="material-symbols-outlined text-[#0061FF]">cloud_sync</span>

@@ -5,7 +5,7 @@ import { useToast } from '../../hooks/useToast';
 import { checkWeatherAtLocation, checkRentalWeatherConsistency } from '../../services/weatherApi';
 
 const CustomerEquipment = () => {
-  const { equipmentList, addBooking } = useRental();
+  const { equipmentList, bookings, addBooking } = useRental();
   const { user, userMetadata } = useAuth();
   const { addToast } = useToast();
 
@@ -28,6 +28,7 @@ const CustomerEquipment = () => {
   // Weather Check State
   const [isCheckingWeather, setIsCheckingWeather] = useState(false);
   const [weatherAlertModal, setWeatherAlertModal] = useState(null); // { condition, description, ... } or null
+  const [niceWeatherConfirmed, setNiceWeatherConfirmed] = useState(null); // { message, dates }
 
   // License State
   const [licenseNumber, setLicenseNumber] = useState('');
@@ -38,8 +39,24 @@ const CustomerEquipment = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [qrTimer, setQrTimer] = useState(250);
 
+  // Sync createdBooking status with central bookings state in real-time
+  useEffect(() => {
+    if (!createdBooking) return;
+    const latest = (bookings || []).find((b) => b.booking_id === createdBooking.booking_id || b.id === createdBooking.id);
+    if (latest && latest.status !== createdBooking.status) {
+      setCreatedBooking(latest);
+      if (latest.status === 'HANDOVER_ACCEPTED') {
+        addToast(`🎉 Handover Approved by Employee Camera Scan! Equipment ${latest.equipment_id} is now rented to you.`, 'success', 'Rental Active');
+      }
+    }
+  }, [bookings, createdBooking]);
+
   useEffect(() => {
     if (bookingStep !== 4 || !createdBooking) return;
+    if (createdBooking.status === 'HANDOVER_ACCEPTED') {
+      setQrTimer(0);
+      return;
+    }
     setQrTimer(250);
     const interval = setInterval(() => {
       setQrTimer((prev) => (prev <= 1 ? 0 : prev - 1));
@@ -141,8 +158,15 @@ const CustomerEquipment = () => {
         ...weatherResult,
         consistency: consistencyResult,
       });
+      setNiceWeatherConfirmed(null);
     } else {
-      // Normal weather — proceed silently to Step 3
+      // Nice weather — set confirmation screen notice and proceed to Step 3
+      setNiceWeatherConfirmed({
+        message: `Nice weather confirmed from ${startDate} to ${endDate}! Clear skies (${weatherResult.temperature}°C) and safe operational conditions.`,
+        temp: weatherResult.temperature,
+        location: weatherResult.location || jobsite,
+      });
+      addToast(`☀️ Nice weather confirmed from ${startDate} to ${endDate}!`, 'success', 'Weather Optimal');
       setBookingStep(3);
     }
   };
@@ -294,10 +318,57 @@ const CustomerEquipment = () => {
                     </h3>
                     <span className="font-label-bold text-xs text-primary font-bold">₹1,000 / day</span>
                   </div>
-                  <p className="font-body-sm text-secondary flex items-center gap-xs">
-                    <span className="material-symbols-outlined text-[16px]">location_on</span>
+                  <p className="font-body-sm text-secondary flex items-center gap-xs text-xs mb-sm">
+                    <span className="material-symbols-outlined text-[16px] text-primary">location_on</span>
                     {item.site || item.sites?.name || 'Central Equipment Yard'}
                   </p>
+
+                  {/* Real-time Telemetry: Fuel & Run Time Engine Hours */}
+                  <div className="bg-surface-container-low p-sm rounded-lg space-y-xs my-xs border border-outline-variant/40">
+                    <div className="flex items-center justify-between text-[11px] font-bold">
+                      <span className="flex items-center gap-1 text-on-surface">
+                        <span className="material-symbols-outlined text-xs text-amber-600">local_gas_station</span>
+                        Live Fuel:
+                      </span>
+                      <span className="font-mono text-primary font-black">{item.fuel_level !== undefined ? item.fuel_level : 85}%</span>
+                    </div>
+                    <div className="w-full h-1.5 bg-gray-200 rounded-full overflow-hidden">
+                      <div
+                        className={`h-full transition-all duration-1000 ${
+                          (item.fuel_level || 85) < 30
+                            ? 'bg-rose-500'
+                            : (item.fuel_level || 85) < 60
+                            ? 'bg-amber-500'
+                            : 'bg-emerald-500'
+                        }`}
+                        style={{ width: `${item.fuel_level !== undefined ? item.fuel_level : 85}%` }}
+                      ></div>
+                    </div>
+
+                    <div className="flex items-center justify-between text-[11px] font-bold pt-1 text-secondary">
+                      <span className="flex items-center gap-1">
+                        <span className="material-symbols-outlined text-xs text-blue-600">timer</span>
+                        Total Run Time:
+                      </span>
+                      <span className="font-mono font-bold text-on-surface">
+                        {item.engine_hours || item.engine_hours_day || 142.5} hrs
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Availability Status & Countdown */}
+                  <div className="mt-xs text-[11px] font-bold">
+                    {isAvailable ? (
+                      <span className="text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 flex items-center gap-1">
+                        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+                        🟢 Available Now (Immediate Dispatch)
+                      </span>
+                    ) : (
+                      <span className="text-amber-800 bg-amber-50 px-2 py-0.5 rounded border border-amber-200 flex items-center gap-1">
+                        <span>⏳</span> Rented — Available in {item.rental_days || '3 Days'}
+                      </span>
+                    )}
+                  </div>
                 </div>
 
                 <div className="mt-md pt-sm border-t border-outline-variant flex items-center justify-between">
@@ -588,6 +659,16 @@ const CustomerEquipment = () => {
             {/* STEP 3: License Verification & Finalize (Section 5.2 & 5.3) */}
             {bookingStep === 3 && !weatherAlertModal && (
               <form onSubmit={handleFinalizeRental} className="p-lg space-y-md">
+                {niceWeatherConfirmed && (
+                  <div className="p-md bg-emerald-500/10 border-2 border-emerald-500 rounded-xl flex items-center gap-md text-emerald-950">
+                    <span className="material-symbols-outlined text-3xl text-emerald-600">wb_sunny</span>
+                    <div>
+                      <h4 className="font-bold text-sm uppercase tracking-wide">☀️ Nice Weather Confirmed!</h4>
+                      <p className="text-xs text-emerald-800 font-medium">{niceWeatherConfirmed.message}</p>
+                    </div>
+                  </div>
+                )}
+
                 <div className="p-md bg-surface-container-low rounded-xl space-y-xs">
                   <span className="font-label-bold text-xs text-primary uppercase">Summary Review</span>
                   <div className="grid grid-cols-2 gap-sm text-sm">
