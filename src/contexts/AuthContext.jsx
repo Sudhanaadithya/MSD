@@ -7,7 +7,7 @@ export const AuthContext = createContext({});
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
     const saved = localStorage.getItem('smart_rental_user');
-    return saved ? JSON.parse(saved) : { id: 'usr_guest', email: 'guest@smartrental.com' };
+    return saved ? JSON.parse(saved) : null;
   });
   const [session, setSession] = useState(null);
   const [role, setRoleState] = useState(() => {
@@ -35,6 +35,9 @@ export const AuthProvider = ({ children }) => {
           setUserMetadata(meta);
           const savedRole = localStorage.getItem('smart_rental_role') || meta.role || 'customer';
           setRole(savedRole);
+        } else {
+          const saved = localStorage.getItem('smart_rental_user');
+          if (!saved) setUser(null);
         }
       } catch (err) {
         console.warn('Auth session notice:', err);
@@ -54,9 +57,9 @@ export const AuthProvider = ({ children }) => {
         setUserMetadata(meta);
         const savedRole = localStorage.getItem('smart_rental_role') || meta.role || 'customer';
         setRole(savedRole);
-      } else {
-        const currentSavedRole = localStorage.getItem('smart_rental_role') || 'customer';
-        setRoleState(currentSavedRole);
+      } else if (event === 'SIGNED_OUT') {
+        setUser(null);
+        localStorage.removeItem('smart_rental_user');
       }
       setLoading(false);
     });
@@ -73,49 +76,39 @@ export const AuthProvider = ({ children }) => {
     }
 
     const activeRole = (preferredRole || (email.includes('employee') || email.includes('admin') || email.includes('caterpillar') || email.includes('operator') ? 'employee' : 'customer')).toLowerCase();
-    
-    // Explicitly lock active role immediately
-    setRole(activeRole);
 
     try {
-      // 1. Attempt Supabase Cloud Authentication
+      // 1. Supabase Cloud Authentication Check
       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
       
-      if (error) {
-        if (error.message?.toLowerCase().includes('invalid login credentials') || error.status === 400) {
-          const savedUser = localStorage.getItem('smart_rental_user');
-          if (savedUser) {
-            const parsed = JSON.parse(savedUser);
-            if (parsed.email === email) {
-              setUser(parsed);
-              setRole(activeRole);
-              return { user: parsed, session: { access_token: 'local_session', user: parsed } };
-            }
-          }
-          throw new Error('Invalid email or password. Please verify credentials or click Create Account.');
-        }
-        throw new Error(error.message);
-      }
-
-      if (data?.user) {
+      if (!error && data?.user) {
         setUser(data.user);
         localStorage.setItem('smart_rental_user', JSON.stringify(data.user));
         setRole(activeRole);
+        return data;
       }
-      return data;
-    } catch (err) {
-      if (email === 'employee@smartrental.com' || email === 'customer@smartrental.com' || err.message?.includes('Invalid email')) {
-        const demoUser = {
+
+      // 2. Allow Demo Accounts or Previously Registered Local Users
+      const isDemoAccount = email === 'employee@smartrental.com' || email === 'customer@smartrental.com';
+      const savedUser = localStorage.getItem('smart_rental_user');
+      const isRegisteredLocalUser = savedUser && JSON.parse(savedUser).email === email;
+
+      if (isDemoAccount || isRegisteredLocalUser) {
+        const authUser = savedUser ? JSON.parse(savedUser) : {
           id: 'usr_' + (activeRole === 'employee' ? 'emp_101' : 'cust_101'),
           email: email,
           user_metadata: { full_name: email.split('@')[0], role: activeRole },
         };
-        setUser(demoUser);
-        localStorage.setItem('smart_rental_user', JSON.stringify(demoUser));
+        setUser(authUser);
+        localStorage.setItem('smart_rental_user', JSON.stringify(authUser));
         setRole(activeRole);
-        setUserMetadata(demoUser.user_metadata);
-        return { user: demoUser, session: { access_token: 'demo_token', user: demoUser } };
+        setUserMetadata(authUser.user_metadata || {});
+        return { user: authUser, session: { access_token: 'valid_session', user: authUser } };
       }
+
+      // 3. Reject Unregistered / Random Email Address
+      throw new Error('Invalid email or password. Please verify your credentials or click Create Account to register.');
+    } catch (err) {
       throw err;
     }
   };

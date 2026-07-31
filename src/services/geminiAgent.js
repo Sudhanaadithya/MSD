@@ -29,6 +29,8 @@ import {
   getDashboardStats,
 } from './database';
 
+import { checkWeatherAtLocation, get5DayWeatherForecast, checkRentalWeatherConsistency } from './weatherApi';
+
 // ── Gemini Client ──────────────────────────────────────────────────
 const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 
@@ -217,6 +219,21 @@ const functionDeclarations = [
       properties: {},
     },
   },
+  {
+    name: 'checkWeatherForecast',
+    description:
+      'Get live weather data, rain forecasts, wind speed, and operational safety advisories for a construction site or city using OpenWeatherMap & Upstash Redis caching. Use when the user asks about weather, rain, storms, wind, or operational suitability.',
+    parameters: {
+      type: 'object',
+      properties: {
+        location: {
+          type: 'string',
+          description: 'Site ID (e.g., S001, S002, S003) or city name (e.g., Chennai, Bangalore, Hyderabad)',
+        },
+      },
+      required: ['location'],
+    },
+  },
 ];
 
 // ── Function Router ────────────────────────────────────────────────
@@ -232,6 +249,7 @@ const functionMap = {
   getSites: () => getSites(),
   getDashboardStats: () => getDashboardStats(),
   checkMLHealth: () => checkMLHealth(),
+  checkWeatherForecast: (args) => checkWeatherAtLocation(args?.location || 'S001'),
 };
 
 // ── System Instruction ─────────────────────────────────────────────

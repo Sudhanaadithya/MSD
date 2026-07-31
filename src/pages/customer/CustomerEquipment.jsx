@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { useRental } from '../../contexts/RentalContext';
 import { useAuth } from '../../hooks/useAuth';
 import { useToast } from '../../hooks/useToast';
-import { checkWeatherAtLocation } from '../../services/weatherApi';
+import { checkWeatherAtLocation, checkRentalWeatherConsistency } from '../../services/weatherApi';
 
 const CustomerEquipment = () => {
   const { equipmentList, addBooking } = useRental();
@@ -129,12 +129,18 @@ const CustomerEquipment = () => {
     }
 
     setIsCheckingWeather(true);
-    const weatherResult = await checkWeatherAtLocation(jobsite);
+    const [weatherResult, consistencyResult] = await Promise.all([
+      checkWeatherAtLocation(jobsite),
+      checkRentalWeatherConsistency(jobsite, startDate, endDate),
+    ]);
     setIsCheckingWeather(false);
 
-    if (weatherResult.isSevere) {
-      // Show severe weather warning modal
-      setWeatherAlertModal(weatherResult);
+    if (weatherResult.isSevere || !consistencyResult.isConsistent) {
+      // Show severe weather warning modal with rental date consistency details
+      setWeatherAlertModal({
+        ...weatherResult,
+        consistency: consistencyResult,
+      });
     } else {
       // Normal weather — proceed silently to Step 3
       setBookingStep(3);
@@ -731,6 +737,64 @@ const CustomerEquipment = () => {
                 </div>
               </div>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* Weather Advisory Modal */}
+      {weatherAlertModal && (
+        <div className="fixed inset-0 z-[10000] bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="bg-surface-white w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden border border-status-warning/40 animate-in fade-in zoom-in duration-200">
+            <div className="bg-status-warning p-md text-gray-950 flex items-center gap-md">
+              <span className="material-symbols-outlined text-3xl">cloud_alert</span>
+              <div>
+                <h3 className="font-headline-sm font-bold uppercase tracking-wide">Weather Consistency Advisory</h3>
+                <span className="text-xs font-bold opacity-80">OpenWeather Live Monitoring • {jobsite}</span>
+              </div>
+            </div>
+            <div className="p-lg space-y-md text-sm">
+              <div className="p-md bg-amber-50 rounded-xl border border-amber-200 space-y-xs">
+                <div className="flex items-center justify-between text-xs font-bold text-amber-900">
+                  <span>Current Condition: {weatherAlertModal.condition}</span>
+                  <span>Temp: {weatherAlertModal.temperature}°C</span>
+                </div>
+                <p className="text-xs text-amber-800">
+                  {weatherAlertModal.consistency?.recommendation || 'Precipitation or high wind load expected during your rental period.'}
+                </p>
+              </div>
+
+              {weatherAlertModal.consistency?.hazards?.length > 0 && (
+                <div className="space-y-xs">
+                  <span className="font-label-bold text-xs uppercase text-gray-700">Flagged Weather Hazards:</span>
+                  <ul className="space-y-1">
+                    {weatherAlertModal.consistency.hazards.map((h, i) => (
+                      <li key={i} className="text-xs text-red-600 font-semibold flex items-center gap-1.5 bg-red-50 p-2 rounded border border-red-200">
+                        <span>⚠️</span> {h}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              <p className="text-xs text-secondary italic">
+                You may still proceed with your rental booking. Operational site safety precautions (ground tarps & outrigger pads) are recommended.
+              </p>
+
+              <div className="flex items-center justify-end gap-sm pt-sm border-t">
+                <button
+                  onClick={() => setWeatherAlertModal(null)}
+                  className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 text-xs font-bold rounded-lg uppercase"
+                >
+                  Adjust Dates
+                </button>
+                <button
+                  onClick={handleProceedDespiteWeather}
+                  className="px-4 py-2 bg-[#FFCD00] hover:bg-amber-400 text-gray-950 text-xs font-black rounded-lg uppercase shadow-sm"
+                >
+                  Proceed Anyway
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}
