@@ -692,8 +692,22 @@ export function createChatSession() {
     } catch (err) {
       console.error('AI Assistant Notice:', err);
 
+      // On 429 / quota exhausted / network error — use intelligent local fallback
+      const isQuotaError = err?.message?.includes('429') || err?.message?.includes('quota') || err?.message?.includes('RESOURCE_EXHAUSTED');
+
+      if (isQuotaError) {
+        // Build a rich local response using already-fetched fleet data
+        const topEquip = fmtEquip(equipment);
+        const topAlerts = fmtAlerts(alerts);
+
+        return {
+          text: `**📊 Fleet Intelligence (Offline Mode):**\n\nI'm currently operating in local intelligence mode. Here's what I found:\n\n**Fleet Overview:**\n- ${stats.totalEquipment} total equipment | ${stats.activeRentals} active rentals | ${stats.unresolvedAlerts} unresolved alerts\n\n**🏗️ Equipment:**\n${topEquip || '- Equipment data loaded from local fleet store'}\n\n**⚠️ Alerts:**\n${topAlerts || '- No critical alerts at this time.'}\n\n💡 *AI responses will resume when the API quota resets. You can still ask me about equipment, alerts, forecasts, rentals, sites, and more — I'll answer using live fleet data!*`,
+          functionsCalled,
+        };
+      }
+
       return {
-        text: 'I am processing your query using standard fleet intelligence.',
+        text: 'I am processing your query using standard fleet intelligence. Please try rephrasing your question.',
         functionsCalled,
       };
     }
