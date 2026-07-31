@@ -3983,12 +3983,12 @@ export async function saveUserProfile(userOrData, extraData = {}) {
       full_name: userOrData.fullName || userOrData.full_name || extraData.full_name || (email ? email.split('@')[0] : 'User'),
       role: (userOrData.role || extraData.role || 'customer').toLowerCase(),
       company_or_work_id: userOrData.companyOrWorkId || extraData.company_or_work_id || '',
-      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
     };
 
     const { data, error } = await supabase
       .from('user_profiles')
-      .upsert(payload, { onConflict: 'email' });
+      .upsert(payload, { onConflict: 'id' });
 
     if (error) {
       console.warn('[Supabase saveUserProfile Notice]:', error.message);

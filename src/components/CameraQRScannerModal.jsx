@@ -51,7 +51,7 @@ const CameraQRScannerModal = ({ isOpen, onClose, onScanSuccess }) => {
 
           await html5Qr.start(
             backCam.id,
-            { fps: 15, qrbox: { width: 260, height: 260 }, aspectRatio: 1.0 },
+            { fps: 15, qrbox: { width: 360, height: 360 }, aspectRatio: 1.0 },
             (decodedText) => {
               playBeep();
               setScannedTag(decodedText);
@@ -215,15 +215,15 @@ const CameraQRScannerModal = ({ isOpen, onClose, onScanSuccess }) => {
                   <defs>
                     <mask id="wa-mask">
                       <rect width="100%" height="100%" fill="white" />
-                      <rect x="50%" y="50%" width="280" height="280" rx="24" ry="24" fill="black"
-                        transform="translate(-140, -140)" />
+                      <rect x="50%" y="50%" width="360" height="360" rx="24" ry="24" fill="black"
+                        transform="translate(-180, -180)" />
                     </mask>
                   </defs>
                   <rect width="100%" height="100%" fill="rgba(11, 20, 26, 0.65)" mask="url(#wa-mask)" />
                 </svg>
 
                 {/* Reticle Frame — WhatsApp-style rounded corners */}
-                <div className="absolute top-1/2 left-1/2 w-[280px] h-[280px]" style={{ transform: 'translate(-50%, -50%)' }}>
+                <div className="absolute top-1/2 left-1/2 w-[360px] h-[360px] max-w-[90vw] max-h-[90vw]" style={{ transform: 'translate(-50%, -50%)' }}>
                   {/* Corner brackets */}
                   <div className="absolute -top-0.5 -left-0.5 w-14 h-14" style={{ animation: 'waCornerPulse 2s ease-in-out infinite' }}>
                     <div className="absolute top-0 left-0 w-full h-1 rounded-full" style={{ background: '#00a884' }}></div>
@@ -255,7 +255,7 @@ const CameraQRScannerModal = ({ isOpen, onClose, onScanSuccess }) => {
 
                 {/* Success flash */}
                 {scanSuccess && (
-                  <div className="absolute top-1/2 left-1/2 w-[280px] h-[280px] rounded-3xl flex items-center justify-center"
+                  <div className="absolute top-1/2 left-1/2 w-[360px] h-[360px] max-w-[90vw] max-h-[90vw] rounded-3xl flex items-center justify-center"
                     style={{ transform: 'translate(-50%, -50%)', background: 'rgba(0, 168, 132, 0.2)', animation: 'waSuccessScale 0.4s ease-out' }}>
                     <div className="flex flex-col items-center gap-2">
                       <span className="material-symbols-outlined text-5xl" style={{ color: '#00a884' }}>check_circle</span>
