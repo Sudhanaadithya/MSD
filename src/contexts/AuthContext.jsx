@@ -88,25 +88,28 @@ export const AuthProvider = ({ children }) => {
         return data;
       }
 
-      // 2. Allow Demo Accounts or Previously Registered Local Users
+      // 2. Allow Demo Accounts or Registered Local Users
       const isDemoAccount = email === 'employee@smartrental.com' || email === 'customer@smartrental.com';
+      const registeredList = JSON.parse(localStorage.getItem('smart_rental_registered_users') || '[]');
+      const registeredMatch = registeredList.find((u) => u.email === email && (!u.password || u.password === password));
       const savedUser = localStorage.getItem('smart_rental_user');
-      const isRegisteredLocalUser = savedUser && JSON.parse(savedUser).email === email;
+      const savedUserMatch = savedUser && JSON.parse(savedUser).email === email ? JSON.parse(savedUser) : null;
 
-      if (isDemoAccount || isRegisteredLocalUser) {
-        const authUser = savedUser ? JSON.parse(savedUser) : {
+      if (isDemoAccount || registeredMatch || savedUserMatch) {
+        const authUser = registeredMatch?.user || savedUserMatch || {
           id: 'usr_' + (activeRole === 'employee' ? 'emp_101' : 'cust_101'),
           email: email,
           user_metadata: { full_name: email.split('@')[0], role: activeRole },
         };
+        const finalRole = registeredMatch?.role || activeRole;
         setUser(authUser);
         localStorage.setItem('smart_rental_user', JSON.stringify(authUser));
-        setRole(activeRole);
+        setRole(finalRole);
         setUserMetadata(authUser.user_metadata || {});
         return { user: authUser, session: { access_token: 'valid_session', user: authUser } };
       }
 
-      // 3. Reject Unregistered / Random Email Address
+      // 3. Reject Unregistered / Wrong Credentials
       throw new Error('Invalid email or password. Please verify your credentials or click Create Account to register.');
     } catch (err) {
       throw err;
@@ -114,18 +117,27 @@ export const AuthProvider = ({ children }) => {
   };
 
   const signUp = async ({ email, password, fullName, companyOrWorkId, regType }) => {
-    let authData = null;
-    let authError = null;
-
     const forcedRole = (regType === 'employee' ? 'employee' : 'customer').toLowerCase();
     const forcedRegType = regType || 'customer';
 
+    // Save profile to Supabase user_profiles table & registered accounts store
     await saveUserProfile({
       email,
       fullName,
       role: forcedRole,
       companyOrWorkId,
     });
+
+    let createdUser = {
+      id: 'usr_' + Date.now(),
+      email,
+      user_metadata: {
+        full_name: fullName,
+        role: forcedRole,
+        reg_type: forcedRegType,
+        company_or_work_id: companyOrWorkId || '',
+      },
+    };
 
     try {
       const { data, error } = await supabase.auth.signUp({
@@ -141,35 +153,27 @@ export const AuthProvider = ({ children }) => {
         },
       });
 
-      if (error) {
-        authError = error;
-      } else {
-        authData = data;
+      if (!error && data?.user) {
+        createdUser = data.user;
       }
     } catch (err) {
-      authError = err;
+      console.warn('Supabase Auth signUp notice:', err.message);
     }
 
-    const virtualUser = {
-      id: 'usr_' + Date.now(),
-      email: email,
-      user_metadata: {
-        full_name: fullName,
-        role: forcedRole,
-        reg_type: forcedRegType,
-        company_or_work_id: companyOrWorkId || '',
-      },
-    };
+    // Persist registered credentials locally so login succeeds reliably
+    const registeredList = JSON.parse(localStorage.getItem('smart_rental_registered_users') || '[]');
+    const updated = registeredList.filter((u) => u.email !== email);
+    updated.push({ email, password, role: forcedRole, user: createdUser });
+    localStorage.setItem('smart_rental_registered_users', JSON.stringify(updated));
 
-    setUser(virtualUser);
-    localStorage.setItem('smart_rental_user', JSON.stringify(virtualUser));
+    setUser(createdUser);
+    localStorage.setItem('smart_rental_user', JSON.stringify(createdUser));
     setRole(forcedRole);
-    setUserMetadata(virtualUser.user_metadata);
+    setUserMetadata(createdUser.user_metadata || {});
 
     return {
-      user: virtualUser,
-      session: { access_token: 'local_token', user: virtualUser },
-      rateLimitBypassed: true,
+      user: createdUser,
+      session: { access_token: 'active_session', user: createdUser },
     };
   };
 

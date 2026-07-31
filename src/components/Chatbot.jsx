@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { useLocation } from 'react-router-dom';
 import { createChatSession } from '../services/geminiAgent';
 
 // ── Singleton chat session ─────────────────────────────────────────
@@ -60,6 +61,10 @@ const getLiveIntentBadge = (text) => {
 };
 
 const Chatbot = () => {
+  const location = useLocation();
+  const isAuthPage = location.pathname === '/login' || location.pathname === '/signup' || location.pathname === '/';
+  if (isAuthPage) return null;
+  
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
     {

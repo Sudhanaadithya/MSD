@@ -3974,19 +3974,36 @@ export async function getNotifications() {
   }
 }
 
-export async function saveUserProfile(user, extraData = {}) {
+export async function saveUserProfile(userOrData, extraData = {}) {
   try {
-    const profile = {
-      id: user.id,
-      email: user.email,
-      role: extraData.role || 'Customer',
-      updated_at: new Date().toISOString(),
+    const email = userOrData.email || userOrData.id;
+    const payload = {
+      id: userOrData.id || email,
+      email: email,
+      full_name: userOrData.fullName || userOrData.full_name || extraData.full_name || (email ? email.split('@')[0] : 'User'),
+      role: (userOrData.role || extraData.role || 'customer').toLowerCase(),
+      company_or_work_id: userOrData.companyOrWorkId || extraData.company_or_work_id || '',
+      created_at: new Date().toISOString(),
     };
-    const { data, error } = await supabase.from('profiles').upsert(profile).select();
-    if (error) uninitializedTables.add('profiles');
-    return data?.[0] || profile;
+
+    const { data, error } = await supabase
+      .from('user_profiles')
+      .upsert(payload, { onConflict: 'email' });
+
+    if (error) {
+      console.warn('[Supabase saveUserProfile Notice]:', error.message);
+    }
+
+    // Always store registered user account locally as fallback for seamless logins
+    const existingUsers = JSON.parse(localStorage.getItem('smart_rental_registered_users') || '[]');
+    const filtered = existingUsers.filter((u) => u.email !== email);
+    filtered.push(payload);
+    localStorage.setItem('smart_rental_registered_users', JSON.stringify(filtered));
+
+    return data?.[0] || payload;
   } catch (err) {
-    return { id: user.id, email: user.email, role: extraData.role || 'Customer' };
+    console.warn('[saveUserProfile Exception]:', err.message);
+    return null;
   }
 }
 
@@ -4125,4 +4142,20 @@ export async function seedCloudDatabase() {
   } catch (err) {
     return { success: false, error: err.message };
   }
+}
+
+// ── User Profiles Database Storage & Fallback ──────────────────────
+export async function getUserProfile(email) {
+  try {
+    const { data, error } = await supabase
+      .from('user_profiles')
+      .select('*')
+      .eq('email', email)
+      .single();
+
+    if (!error && data) return data;
+  } catch (e) {}
+
+  const existingUsers = JSON.parse(localStorage.getItem('smart_rental_registered_users') || '[]');
+  return existingUsers.find((u) => u.email === email) || null;
 }
